@@ -42,12 +42,23 @@ func demoSoapInput() {
 
 // メインメニュー
 print("1. 今日のデボーションを記録する")
-print("2. 終了")
-print("選択してください (1-2):")
+print("2. TestFlightへアプリをデプロイする")
+print("3. 終了")
+print("選択してください (1-3):")
 
 if let input = readLine(), let choice = Int(input) {
     if choice == 1 {
         demoSoapInput()
+    } else if choice == 2 {
+        print("\nTestFlightへのデプロイを開始します...")
+        // deploy.shスクリプトを実行するコマンドを実行
+        let task = Process()
+        task.launchPath = "/bin/bash"
+        task.arguments = ["./deploy.sh"]
+        task.launch()
+        task.waitUntilExit()
+        
+        print("\nデプロイリクエストが完了しました。プロセスの詳細はGitHubのActionsタブで確認できます。")
     } else {
         print("アプリケーションを終了します。")
     }

@@ -4,6 +4,11 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:  # 手動トリガーも設定
+    inputs:
+      deploy_reference:
+        description: 'デプロイの参照情報（例：replit_deploy_2023-04-12）'
+        required: false
+        default: 'manual_deploy'
 
 jobs:
   build:
