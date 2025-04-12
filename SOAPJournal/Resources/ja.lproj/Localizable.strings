@@ -1,0 +1,32 @@
+/* App title and navigation */
+"app_name" = "聖書デボーション";
+"today" = "今日";
+"calendar" = "カレンダー";
+"history" = "履歴";
+"today_devotion" = "今日のデボーション";
+"devotion_entry" = "デボーション記録";
+
+/* SOAP method labels */
+"scripture" = "S: 聖句";
+"observation" = "O: 観察・気づき";
+"application" = "A: 適用・行動への反映";
+"prayer" = "P: 祈り";
+
+/* Placeholders */
+"scripture_placeholder" = "今日の聖書箇所を入力してください...";
+"observation_placeholder" = "聖句から気づいたことを記録しましょう...";
+"application_placeholder" = "あなたの生活にどう適用できますか？...";
+"prayer_placeholder" = "この聖句に基づいた祈りを書きましょう...";
+
+/* Buttons */
+"save_entry" = "保存する";
+"save_changes" = "変更を保存";
+"edit" = "編集";
+"cancel" = "キャンセル";
+"close" = "閉じる";
+"ok" = "OK";
+
+/* Messages */
+"entry_saved" = "デボーション記録を保存しました";
+"no_entries" = "記録がありません";
+"no_entry_for_date" = "この日の記録はありません";

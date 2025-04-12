@@ -1,0 +1,52 @@
+modules = ["swift"]
+
+[nix]
+channel = "stable-24_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "SwiftSOAPJournal"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "run_soap_journal"
+
+[[workflows.workflow]]
+name = "SwiftSOAPJournal"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "swift run"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "run_soap_journal"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd SOAPJournal && swift run"
+
+[deployment]
+run = ["sh", "-c", "swift run"]
