@@ -53,9 +53,9 @@ if let input = readLine(), let choice = Int(input) {
         print("\nTestFlightへのデプロイを開始します...")
         // deploy.shスクリプトを実行するコマンドを実行
         let task = Process()
-        task.launchPath = "/bin/bash"
+        task.executableURL = URL(fileURLWithPath: "/bin/bash")
         task.arguments = ["./deploy.sh"]
-        task.launch()
+        try? task.run()
         task.waitUntilExit()
         
         print("\nデプロイリクエストが完了しました。プロセスの詳細はGitHubのActionsタブで確認できます。")
