@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22F82" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21D62" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="DevotionEntry" representedClassName=".DevotionEntry" syncable="YES">
         <attribute name="application" optional="YES" attributeType="String"/>
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
@@ -8,4 +8,7 @@
         <attribute name="prayer" optional="YES" attributeType="String"/>
         <attribute name="scripture" optional="YES" attributeType="String"/>
     </entity>
+    <elements>
+        <element name="DevotionEntry" positionX="-63" positionY="-18" width="128" height="119"/>
+    </elements>
 </model>

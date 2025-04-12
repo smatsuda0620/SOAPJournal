@@ -7,46 +7,42 @@ struct SOAPInputView: View {
     @Binding var prayer: String
     
     var body: some View {
-        VStack(spacing: 20) {
-            // S: 聖句
-            inputSection(
-                title: NSLocalizedString("scripture", comment: "Scripture label"),
-                placeholder: NSLocalizedString("scripture_placeholder", comment: "Scripture placeholder"),
-                text: $scripture
+        VStack(alignment: .leading, spacing: 16) {
+            sectionView(
+                title: NSLocalizedString("scripture", comment: "Scripture section title"),
+                text: $scripture,
+                placeholder: NSLocalizedString("scripture_placeholder", comment: "Scripture input placeholder")
             )
             
-            // O: 観察・気づき
-            inputSection(
-                title: NSLocalizedString("observation", comment: "Observation label"),
-                placeholder: NSLocalizedString("observation_placeholder", comment: "Observation placeholder"),
-                text: $observation
+            sectionView(
+                title: NSLocalizedString("observation", comment: "Observation section title"),
+                text: $observation,
+                placeholder: NSLocalizedString("observation_placeholder", comment: "Observation input placeholder")
             )
             
-            // A: 適用・行動への反映
-            inputSection(
-                title: NSLocalizedString("application", comment: "Application label"),
-                placeholder: NSLocalizedString("application_placeholder", comment: "Application placeholder"),
-                text: $application
+            sectionView(
+                title: NSLocalizedString("application", comment: "Application section title"),
+                text: $application,
+                placeholder: NSLocalizedString("application_placeholder", comment: "Application input placeholder")
             )
             
-            // P: 祈り
-            inputSection(
-                title: NSLocalizedString("prayer", comment: "Prayer label"),
-                placeholder: NSLocalizedString("prayer_placeholder", comment: "Prayer placeholder"),
-                text: $prayer
+            sectionView(
+                title: NSLocalizedString("prayer", comment: "Prayer section title"),
+                text: $prayer,
+                placeholder: NSLocalizedString("prayer_placeholder", comment: "Prayer input placeholder")
             )
         }
+        .padding()
     }
     
-    // 入力セクションのレイアウト
-    private func inputSection(title: String, placeholder: String, text: Binding<String>) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
+    private func sectionView(title: String, text: Binding<String>, placeholder: String) -> some View {
+        VStack(alignment: .leading) {
             Text(title)
                 .font(.headline)
-                .foregroundColor(.indigo)
+                .padding(.bottom, 4)
             
             TextEditor(text: text)
-                .frame(minHeight: 100)
+                .frame(minHeight: 80)
                 .padding(8)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
@@ -56,14 +52,24 @@ struct SOAPInputView: View {
                     Group {
                         if text.wrappedValue.isEmpty {
                             Text(placeholder)
-                                .foregroundColor(.gray.opacity(0.7))
+                                .foregroundColor(Color.gray.opacity(0.7))
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 12)
                                 .allowsHitTesting(false)
                         }
-                    }
+                    }, alignment: .topLeading
                 )
         }
-        .padding(.horizontal)
+    }
+}
+
+struct SOAPInputView_Previews: PreviewProvider {
+    static var previews: some View {
+        SOAPInputView(
+            scripture: .constant(""),
+            observation: .constant(""),
+            application: .constant(""),
+            prayer: .constant("")
+        )
     }
 }

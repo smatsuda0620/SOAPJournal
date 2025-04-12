@@ -1,32 +1,65 @@
 import SwiftUI
+import CoreData
 
 struct ContentView: View {
-    @EnvironmentObject var devotionManager: DevotionManager
+    @Environment(\.managedObjectContext) private var viewContext
+    
+    // デボーションマネージャー
+    private var devotionManager: DevotionManager
+    
+    // 現在選択されているタブ
+    @State private var selectedTab = 0
+    
+    // 初期化
+    init() {
+        // デボーションマネージャーの初期化
+        let context = PersistenceController.shared.container.viewContext
+        devotionManager = DevotionManager(context: context)
+    }
     
     var body: some View {
-        TabView {
-            TodayView()
+        TabView(selection: $selectedTab) {
+            // 今日のデボーションタブ
+            TodayView(devotionManager: devotionManager)
                 .tabItem {
-                    Label(NSLocalizedString("today", comment: "Today tab"), systemImage: "book.fill")
+                    Image(systemName: "book.fill")
+                    Text(NSLocalizedString("today", comment: "Today tab"))
                 }
+                .tag(0)
             
-            CalendarView()
+            // カレンダータブ
+            CalendarView(devotionManager: devotionManager)
                 .tabItem {
-                    Label(NSLocalizedString("calendar", comment: "Calendar tab"), systemImage: "calendar")
+                    Image(systemName: "calendar")
+                    Text(NSLocalizedString("calendar", comment: "Calendar tab"))
                 }
+                .tag(1)
             
-            HistoryView()
+            // 履歴タブ
+            HistoryView(devotionManager: devotionManager)
                 .tabItem {
-                    Label(NSLocalizedString("history", comment: "History tab"), systemImage: "list.bullet")
+                    Image(systemName: "list.bullet")
+                    Text(NSLocalizedString("history", comment: "History tab"))
                 }
+                .tag(2)
         }
-        .accentColor(.indigo)
+        .accentColor(.blue)
+        .onAppear {
+            // デバイスの言語設定に基づいてローカライゼーション
+            let locale = Locale.current
+            print("現在のロケール: \(locale.identifier)")
+            
+            // CoreDataからエントリーを読み込む
+            devotionManager.fetchAllEntries()
+            devotionManager.fetchTodaysEntry()
+        }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-            .environmentObject(DevotionManager())
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+            .environment(\.locale, .init(identifier: "ja"))
     }
 }

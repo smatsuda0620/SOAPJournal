@@ -1,32 +1,40 @@
-/* App title and navigation */
-"app_name" = "Bible Devotion";
+/* 
+  Localizable.strings
+  SOAPJournal
+*/
+
+// Tab menu
 "today" = "Today";
 "calendar" = "Calendar";
 "history" = "History";
-"today_devotion" = "Today's Devotion";
-"devotion_entry" = "Devotion Entry";
 
-/* SOAP method labels */
+// Today page
+"today_devotion" = "Today's Devotion";
+"save_entry" = "Save";
+"entry_saved" = "Saved Successfully";
+
+// SOAP sections
 "scripture" = "S: Scripture";
 "observation" = "O: Observation";
 "application" = "A: Application";
 "prayer" = "P: Prayer";
 
-/* Placeholders */
-"scripture_placeholder" = "Enter today's Bible passage...";
-"observation_placeholder" = "What do you observe in this scripture?...";
-"application_placeholder" = "How can you apply this to your life?...";
-"prayer_placeholder" = "Write a prayer based on this scripture...";
+"scripture_placeholder" = "Enter today's Bible passage";
+"observation_placeholder" = "Write what you observed or noticed from the scripture";
+"application_placeholder" = "How can you apply this to your life?";
+"prayer_placeholder" = "Write a prayer based on the scripture";
 
-/* Buttons */
-"save_entry" = "Save Entry";
-"save_changes" = "Save Changes";
+// History page
+"no_entries" = "No entries found";
+"devotion_entry" = "Devotion Entry";
+
+// Editing
 "edit" = "Edit";
 "cancel" = "Cancel";
-"close" = "Close";
-"ok" = "OK";
+"save_changes" = "Save Changes";
+"delete" = "Delete";
 
-/* Messages */
-"entry_saved" = "Devotion entry saved";
-"no_entries" = "No entries yet";
+// Others
+"ok" = "OK";
+"close" = "Close";
 "no_entry_for_date" = "No entry for this date";

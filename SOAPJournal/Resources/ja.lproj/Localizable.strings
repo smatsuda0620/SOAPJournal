@@ -1,32 +1,40 @@
-/* App title and navigation */
-"app_name" = "聖書デボーション";
+/* 
+  Localizable.strings
+  SOAPJournal
+*/
+
+// タブメニュー
 "today" = "今日";
 "calendar" = "カレンダー";
 "history" = "履歴";
-"today_devotion" = "今日のデボーション";
-"devotion_entry" = "デボーション記録";
 
-/* SOAP method labels */
+// 今日のページ
+"today_devotion" = "今日のデボーション";
+"save_entry" = "保存";
+"entry_saved" = "保存しました";
+
+// SOAPセクション
 "scripture" = "S: 聖句";
-"observation" = "O: 観察・気づき";
-"application" = "A: 適用・行動への反映";
+"observation" = "O: 観察";
+"application" = "A: 適用";
 "prayer" = "P: 祈り";
 
-/* Placeholders */
-"scripture_placeholder" = "今日の聖書箇所を入力してください...";
-"observation_placeholder" = "聖句から気づいたことを記録しましょう...";
-"application_placeholder" = "あなたの生活にどう適用できますか？...";
-"prayer_placeholder" = "この聖句に基づいた祈りを書きましょう...";
+"scripture_placeholder" = "今日の聖書箇所を入力してください";
+"observation_placeholder" = "聖句から観察したこと、気づいたことを書きましょう";
+"application_placeholder" = "どのように生活に適用できますか？";
+"prayer_placeholder" = "聖句に基づいた祈りを書きましょう";
 
-/* Buttons */
-"save_entry" = "保存する";
-"save_changes" = "変更を保存";
+// 履歴ページ
+"no_entries" = "記録が見つかりません";
+"devotion_entry" = "デボーション記録";
+
+// 編集
 "edit" = "編集";
 "cancel" = "キャンセル";
-"close" = "閉じる";
-"ok" = "OK";
+"save_changes" = "変更を保存";
+"delete" = "削除";
 
-/* Messages */
-"entry_saved" = "デボーション記録を保存しました";
-"no_entries" = "記録がありません";
+// その他
+"ok" = "OK";
+"close" = "閉じる";
 "no_entry_for_date" = "この日の記録はありません";

@@ -1,53 +1,97 @@
 import SwiftUI
 
 struct CalendarDayView: View {
-    let date: Date
-    let hasEntry: Bool
-    let isSelected: Bool
-    
-    private let calendar = Calendar.current
+    var day: Int
+    var isToday: Bool
+    var hasEntry: Bool
+    var isCurrentMonth: Bool
+    var action: () -> Void
     
     var body: some View {
-        ZStack {
-            Circle()
-                .fill(backgroundColor)
-                .aspectRatio(1, contentMode: .fit)
-            
-            Text("\(day)")
-                .fontWeight(isToday ? .bold : .regular)
-                .foregroundColor(textColor)
+        Button(action: action) {
+            VStack {
+                // 日付テキスト
+                Text("\(day)")
+                    .font(isToday ? .headline : .body)
+                    .foregroundColor(textColor)
+                
+                // エントリーの有無を表すインジケーター
+                if hasEntry {
+                    Circle()
+                        .fill(Color.blue)
+                        .frame(width: 8, height: 8)
+                }
+            }
+            .frame(width: 35, height: 35)
+            .background(
+                Circle()
+                    .fill(isToday ? Color.blue.opacity(0.2) : Color.clear)
+            )
         }
+        .disabled(!isCurrentMonth)
     }
     
-    // 日付の数字のみを取得
-    private var day: Int {
-        calendar.component(.day, from: date)
-    }
-    
-    // 今日かどうかを判定
-    private var isToday: Bool {
-        calendar.isDateInToday(date)
-    }
-    
-    // セルの背景色
-    private var backgroundColor: Color {
-        if isSelected {
-            return Color.indigo.opacity(0.3)
-        } else if hasEntry {
-            return Color.indigo
-        } else if isToday {
-            return Color.gray.opacity(0.2)
-        } else {
-            return Color.clear
-        }
-    }
-    
-    // テキストの色
+    // テキストの色を決定
     private var textColor: Color {
-        if hasEntry && !isSelected {
-            return .white
+        if !isCurrentMonth {
+            return Color.gray.opacity(0.5)
+        } else if isToday {
+            return Color.blue
         } else {
-            return .primary
+            return Color.primary
         }
+    }
+}
+
+struct CalendarDayView_Previews: PreviewProvider {
+    static var previews: some View {
+        HStack {
+            // 通常の日
+            CalendarDayView(
+                day: 15,
+                isToday: false,
+                hasEntry: false,
+                isCurrentMonth: true,
+                action: {}
+            )
+            
+            // 今日
+            CalendarDayView(
+                day: 16,
+                isToday: true,
+                hasEntry: false,
+                isCurrentMonth: true,
+                action: {}
+            )
+            
+            // エントリーのある日
+            CalendarDayView(
+                day: 17,
+                isToday: false,
+                hasEntry: true,
+                isCurrentMonth: true,
+                action: {}
+            )
+            
+            // 今日でエントリーのある日
+            CalendarDayView(
+                day: 18,
+                isToday: true,
+                hasEntry: true,
+                isCurrentMonth: true,
+                action: {}
+            )
+            
+            // 前月または次月の日
+            CalendarDayView(
+                day: 3,
+                isToday: false,
+                hasEntry: false,
+                isCurrentMonth: false,
+                action: {}
+            )
+        }
+        .padding()
+        .previewLayout(.sizeThatFits)
     }
 }
