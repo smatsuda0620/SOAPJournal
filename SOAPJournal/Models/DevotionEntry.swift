@@ -2,6 +2,7 @@ import Foundation
 import CoreData
 
 // このクラスは、CoreDataエンティティとして使用します。
+@objc(DevotionEntry)
 public class DevotionEntry: NSManagedObject {
     @NSManaged public var id: UUID
     @NSManaged public var date: Date

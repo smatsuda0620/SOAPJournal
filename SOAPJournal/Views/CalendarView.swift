@@ -46,8 +46,9 @@ struct CalendarView: View {
             
             // カレンダーグリッド
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 10) {
-                ForEach(calendarDays(), id: \.self) { date in
-                    if let date = date {
+                ForEach(0..<calendarDays().count, id: \.self) { index in
+                    let dateOpt = calendarDays()[index]
+                    if let date = dateOpt {
                         let day = calendar.component(.day, from: date)
                         let isToday = calendar.isDateInToday(date)
                         let hasEntry = hasEntry(for: date)

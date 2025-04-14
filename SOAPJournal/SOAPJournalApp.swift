@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreData
 
 @main
 struct SOAPJournalApp: App {
@@ -79,8 +80,13 @@ class PersistenceController {
         
         container.loadPersistentStores { description, error in
             if let error = error as NSError? {
-                fatalError("CoreDataスタックのロードに失敗: \(error), \(error.userInfo)")
+                // エラーログを出力しますが、アプリはクラッシュさせません
+                print("CoreDataスタックのロードエラー: \(error), \(error.userInfo)")
             }
         }
+        
+        // メモリ管理のための設定
+        container.viewContext.automaticallyMergesChangesFromParent = true
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     }
 }
