@@ -4,7 +4,7 @@ modules = ["swift", "swift-5.7"]
 channel = "stable-24_05"
 
 [workflows]
-runButton = "Project"
+runButton = "SOAPJournal_Simple"
 
 [[workflows.workflow]]
 name = "Project"
