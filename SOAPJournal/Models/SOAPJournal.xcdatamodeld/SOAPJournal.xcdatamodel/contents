@@ -5,7 +5,7 @@
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="observation" optional="YES" attributeType="String"/>
-        <attribute name="prayer" optional="YES" attributeType="String"/>
+        <attribute name="prayerCompleted" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="scripture" optional="YES" attributeType="String"/>
     </entity>
     <elements>

@@ -49,10 +49,10 @@ class DevotionManager: ObservableObject {
     }
     
     // 新しいエントリーを作成
-    func createEntry(scripture: String, observation: String, application: String, prayer: String, date: Date = Date()) {
+    func createEntry(scripture: String, observation: String, application: String, prayerCompleted: Bool = false, date: Date = Date()) {
         // もし同じ日のエントリーがすでに存在する場合は更新する
         if let existingEntry = fetchEntry(for: date) {
-            updateEntry(existingEntry, scripture: scripture, observation: observation, application: application, prayer: prayer)
+            updateEntry(existingEntry, scripture: scripture, observation: observation, application: application, prayerCompleted: prayerCompleted)
             return
         }
         
@@ -63,7 +63,7 @@ class DevotionManager: ObservableObject {
             scripture: scripture,
             observation: observation, 
             application: application,
-            prayer: prayer
+            prayerCompleted: prayerCompleted
         )
         
         saveContext()
@@ -72,11 +72,11 @@ class DevotionManager: ObservableObject {
     }
     
     // エントリーを更新
-    func updateEntry(_ entry: DevotionEntry, scripture: String, observation: String, application: String, prayer: String) {
+    func updateEntry(_ entry: DevotionEntry, scripture: String, observation: String, application: String, prayerCompleted: Bool) {
         entry.scripture = scripture
         entry.observation = observation
         entry.application = application
-        entry.prayer = prayer
+        entry.prayerCompleted = prayerCompleted
         
         saveContext()
         fetchAllEntries()

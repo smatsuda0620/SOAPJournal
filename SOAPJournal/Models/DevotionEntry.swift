@@ -9,7 +9,7 @@ public class DevotionEntry: NSManagedObject {
     @NSManaged public var scripture: String
     @NSManaged public var observation: String
     @NSManaged public var application: String
-    @NSManaged public var prayer: String
+    @NSManaged public var prayerCompleted: Bool
     
     // 新しいエントリを作成する便利なメソッド
     static func create(in context: NSManagedObjectContext,
@@ -18,7 +18,7 @@ public class DevotionEntry: NSManagedObject {
                        scripture: String,
                        observation: String,
                        application: String,
-                       prayer: String) -> DevotionEntry {
+                       prayerCompleted: Bool = false) -> DevotionEntry {
         
         let entry = DevotionEntry(context: context)
         entry.id = id
@@ -26,7 +26,7 @@ public class DevotionEntry: NSManagedObject {
         entry.scripture = scripture
         entry.observation = observation
         entry.application = application
-        entry.prayer = prayer
+        entry.prayerCompleted = prayerCompleted
         
         return entry
     }

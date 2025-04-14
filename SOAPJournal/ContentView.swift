@@ -44,7 +44,7 @@ struct ContentView: View {
                 }
                 .tag(2)
         }
-        .accentColor(.blue)
+        .accentColor(Color("Colors/PrimaryBrown"))
         .onAppear {
             // デバイスの言語設定に基づいてローカライゼーション
             let locale = Locale.current

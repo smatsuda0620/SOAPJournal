@@ -4,7 +4,9 @@ struct SOAPInputView: View {
     @Binding var scripture: String
     @Binding var observation: String
     @Binding var application: String
-    @Binding var prayer: String
+    @Binding var prayerCompleted: Bool
+    
+    @State private var showingPrayerTimer = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -26,19 +28,54 @@ struct SOAPInputView: View {
                 placeholder: NSLocalizedString("application_placeholder", comment: "Application input placeholder")
             )
             
-            sectionView(
-                title: NSLocalizedString("prayer", comment: "Prayer section title"),
-                text: $prayer,
-                placeholder: NSLocalizedString("prayer_placeholder", comment: "Prayer input placeholder")
-            )
+            // 祈りセクション（タイマーボタンを表示）
+            VStack(alignment: .leading, spacing: 8) {
+                Text(NSLocalizedString("prayer", comment: "Prayer section title"))
+                    .font(.headline)
+                
+                if prayerCompleted {
+                    HStack {
+                        Text("祈りを完了しました")
+                            .foregroundColor(Color("Colors/PrimaryBrown"))
+                            .padding()
+                            .background(Color("Colors/BackgroundCream"))
+                            .cornerRadius(8)
+                        
+                        Spacer()
+                        
+                        // リセットボタン
+                        Button(action: {
+                            prayerCompleted = false
+                        }) {
+                            Image(systemName: "arrow.counterclockwise")
+                                .foregroundColor(Color("Colors/PrimaryBrown"))
+                        }
+                    }
+                } else {
+                    Button(action: {
+                        showingPrayerTimer = true
+                    }) {
+                        Text("祈りを始める")
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color("Colors/PrimaryBrown"))
+                            .cornerRadius(8)
+                    }
+                }
+            }
         }
         .padding()
+        .sheet(isPresented: $showingPrayerTimer) {
+            PrayerTimerView(prayerCompleted: $prayerCompleted)
+        }
     }
     
     private func sectionView(title: String, text: Binding<String>, placeholder: String) -> some View {
         VStack(alignment: .leading) {
             Text(title)
                 .font(.headline)
+                .foregroundColor(Color("Colors/PrimaryBrown"))
                 .padding(.bottom, 4)
             
             TextEditor(text: text)
@@ -46,13 +83,14 @@ struct SOAPInputView: View {
                 .padding(8)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                        .stroke(Color("Colors/PrimaryBrown").opacity(0.3), lineWidth: 1)
+                        .background(Color("Colors/BackgroundCream").cornerRadius(8))
                 )
                 .overlay(
                     Group {
                         if text.wrappedValue.isEmpty {
                             Text(placeholder)
-                                .foregroundColor(Color.gray.opacity(0.7))
+                                .foregroundColor(Color("Colors/PrimaryBrown").opacity(0.5))
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 12)
                                 .allowsHitTesting(false)
@@ -69,7 +107,7 @@ struct SOAPInputView_Previews: PreviewProvider {
             scripture: .constant(""),
             observation: .constant(""),
             application: .constant(""),
-            prayer: .constant("")
+            prayerCompleted: .constant(false)
         )
     }
 }

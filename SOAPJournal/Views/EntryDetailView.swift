@@ -8,7 +8,7 @@ struct EntryDetailView: View {
     @State private var scripture: String
     @State private var observation: String
     @State private var application: String
-    @State private var prayer: String
+    @State private var prayerCompleted: Bool
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -20,7 +20,7 @@ struct EntryDetailView: View {
         _scripture = State(initialValue: entry.scripture)
         _observation = State(initialValue: entry.observation)
         _application = State(initialValue: entry.application)
-        _prayer = State(initialValue: entry.prayer)
+        _prayerCompleted = State(initialValue: entry.prayerCompleted)
     }
     
     var body: some View {
@@ -30,7 +30,7 @@ struct EntryDetailView: View {
                 HStack {
                     Text(entry.date.displayString)
                         .font(.headline)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(Color("Colors/PrimaryBrown"))
                     
                     Spacer()
                     
@@ -40,10 +40,12 @@ struct EntryDetailView: View {
                             isEditing = false
                             resetValues()
                         }
+                        .foregroundColor(Color("Colors/PrimaryBrown"))
                     } else {
                         Button(NSLocalizedString("edit", comment: "Edit button")) {
                             isEditing = true
                         }
+                        .foregroundColor(Color("Colors/PrimaryBrown"))
                     }
                 }
                 .padding(.horizontal)
@@ -55,17 +57,18 @@ struct EntryDetailView: View {
                         scripture: $scripture,
                         observation: $observation,
                         application: $application,
-                        prayer: $prayer
+                        prayerCompleted: $prayerCompleted
                     )
                     
                     // 保存ボタン
                     Button(action: saveChanges) {
                         Text(NSLocalizedString("save_changes", comment: "Save changes button"))
                             .font(.headline)
+                            .fontWeight(.bold)
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.blue)
+                            .background(Color("Colors/PrimaryBrown"))
                             .cornerRadius(10)
                     }
                     .padding(.horizontal)
@@ -75,10 +78,11 @@ struct EntryDetailView: View {
                     Button(action: deleteEntry) {
                         Text(NSLocalizedString("delete", comment: "Delete button"))
                             .font(.headline)
+                            .fontWeight(.bold)
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.red)
+                            .background(Color.red.opacity(0.8))
                             .cornerRadius(10)
                     }
                     .padding(.horizontal)
@@ -89,7 +93,27 @@ struct EntryDetailView: View {
                         sectionView(title: NSLocalizedString("scripture", comment: "Scripture section"), content: entry.scripture)
                         sectionView(title: NSLocalizedString("observation", comment: "Observation section"), content: entry.observation)
                         sectionView(title: NSLocalizedString("application", comment: "Application section"), content: entry.application)
-                        sectionView(title: NSLocalizedString("prayer", comment: "Prayer section"), content: entry.prayer)
+                        // 祈りセクション（完了状況を表示）
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(NSLocalizedString("prayer", comment: "Prayer section"))
+                                .font(.headline)
+                                .foregroundColor(Color("Colors/PrimaryBrown"))
+                            
+                            HStack {
+                                Image(systemName: entry.prayerCompleted ? "checkmark.circle.fill" : "circle")
+                                    .foregroundColor(entry.prayerCompleted ? Color("Colors/PrimaryBrown") : .gray)
+                                    .font(.title2)
+                                Text(entry.prayerCompleted ? "祈りを完了しました" : "祈りは記録されていません")
+                                    .font(.body)
+                                    .foregroundColor(.primary)
+                            }
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(Color("Colors/BackgroundCream"))
+                            )
+                        }
                     }
                     .padding()
                 }
@@ -102,7 +126,7 @@ struct EntryDetailView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(.headline)
-                .foregroundColor(.primary)
+                .foregroundColor(Color("Colors/PrimaryBrown"))
             
             Text(content)
                 .font(.body)
@@ -112,7 +136,7 @@ struct EntryDetailView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.gray.opacity(0.1))
+                        .fill(Color("Colors/BackgroundCream"))
                 )
         }
     }
@@ -124,7 +148,7 @@ struct EntryDetailView: View {
             scripture: scripture,
             observation: observation,
             application: application,
-            prayer: prayer
+            prayerCompleted: prayerCompleted
         )
         
         isEditing = false
@@ -141,7 +165,7 @@ struct EntryDetailView: View {
         scripture = entry.scripture
         observation = entry.observation
         application = entry.application
-        prayer = entry.prayer
+        prayerCompleted = entry.prayerCompleted
     }
 }
 
@@ -153,7 +177,7 @@ struct EntryDetailView_Previews: PreviewProvider {
             scripture: "ヨハネ3:16",
             observation: "神は世を愛されました...",
             application: "神の愛を思い出すことで...",
-            prayer: "主よ、あなたの素晴らしい愛に感謝します..."
+            prayerCompleted: true
         )
         
         return EntryDetailView(

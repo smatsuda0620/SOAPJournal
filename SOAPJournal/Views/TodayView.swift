@@ -6,7 +6,7 @@ struct TodayView: View {
     @State private var scripture: String = ""
     @State private var observation: String = ""
     @State private var application: String = ""
-    @State private var prayer: String = ""
+    @State private var prayerCompleted: Bool = false
     
     @State private var showingSavedAlert = false
     
@@ -17,29 +17,31 @@ struct TodayView: View {
                 Text(NSLocalizedString("today_devotion", comment: "Today's devotion title"))
                     .font(.largeTitle)
                     .fontWeight(.bold)
+                    .foregroundColor(Color("Colors/PrimaryBrown"))
                     .padding(.top)
                 
                 // 今日の日付
                 Text(Date().displayString)
                     .font(.headline)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(Color("Colors/PrimaryBrown").opacity(0.8))
                 
                 // SOAPフォーム
                 SOAPInputView(
                     scripture: $scripture,
                     observation: $observation,
                     application: $application,
-                    prayer: $prayer
+                    prayerCompleted: $prayerCompleted
                 )
                 
                 // 保存ボタン
                 Button(action: saveEntry) {
                     Text(NSLocalizedString("save_entry", comment: "Save button"))
                         .font(.headline)
+                        .fontWeight(.bold)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.blue)
+                        .background(Color("Colors/PrimaryBrown"))
                         .cornerRadius(10)
                 }
                 .padding(.top)
@@ -60,13 +62,13 @@ struct TodayView: View {
             scripture = entry.scripture
             observation = entry.observation
             application = entry.application
-            prayer = entry.prayer
+            prayerCompleted = entry.prayerCompleted
         } else {
             // 今日のエントリーがない場合は空の状態にする
             scripture = ""
             observation = ""
             application = ""
-            prayer = ""
+            prayerCompleted = false
         }
     }
     
@@ -75,7 +77,7 @@ struct TodayView: View {
             scripture: scripture,
             observation: observation,
             application: application,
-            prayer: prayer
+            prayerCompleted: prayerCompleted
         )
         
         showingSavedAlert = true
