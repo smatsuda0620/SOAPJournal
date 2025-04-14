@@ -90,31 +90,14 @@ struct EntryDetailView: View {
                 } else {
                     // 閲覧モード
                     VStack(alignment: .leading, spacing: 20) {
-                        sectionView(title: NSLocalizedString("scripture", comment: "Scripture section"), content: entry.scripture)
-                        sectionView(title: NSLocalizedString("observation", comment: "Observation section"), content: entry.observation)
-                        sectionView(title: NSLocalizedString("application", comment: "Application section"), content: entry.application)
-                        // 祈りセクション（完了状況を表示）
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(NSLocalizedString("prayer", comment: "Prayer section"))
-                                .font(.headline)
-                                .foregroundColor(Color("PrimaryBrown"))
-                            
-                            HStack {
-                                Image(systemName: entry.prayerCompleted ? "checkmark.circle.fill" : "circle")
-                                    .foregroundColor(entry.prayerCompleted ? Color("PrimaryBrown") : .gray)
-                                    .font(.title2)
-                                Text(entry.prayerCompleted ? 
-                                      NSLocalizedString("prayer_completed", comment: "Prayer completed message") : 
-                                      NSLocalizedString("prayer_not_recorded", comment: "Prayer not recorded message"))
-                                    .font(.body)
-                                    .foregroundColor(.primary)
-                            }
-                            .padding()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .fill(Color("BackgroundCream"))
-                            )
+                        Button(action: { presentationMode.wrappedValue.dismiss() }) {
+                            sectionView(title: NSLocalizedString("scripture", comment: "Scripture section"), content: entry.scripture)
+                        }
+                        Button(action: { presentationMode.wrappedValue.dismiss() }) {
+                            sectionView(title: NSLocalizedString("observation", comment: "Observation section"), content: entry.observation)
+                        }
+                        Button(action: { presentationMode.wrappedValue.dismiss() }) {
+                            sectionView(title: NSLocalizedString("application", comment: "Application section"), content: entry.application)
                         }
                     }
                     .padding()

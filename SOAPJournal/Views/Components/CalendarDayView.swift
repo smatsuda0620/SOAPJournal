@@ -9,28 +9,19 @@ struct CalendarDayView: View {
     
     var body: some View {
         Button(action: action) {
-            VStack {
-                // 日付テキスト
-                Text("\(day)")
-                    .font(isToday ? .headline : .body)
-                    .foregroundColor(textColor)
-                
-                // エントリーの有無を表すインジケーター
-                if hasEntry {
+            // 日付テキスト
+            Text("\(day)")
+                .font(isToday ? .headline : .body)
+                .foregroundColor(textColor)
+                .frame(width: 35, height: 35)
+                .background(
                     Circle()
-                        .fill(Color("PrimaryBrown"))
-                        .frame(width: 8, height: 8)
-                }
-            }
-            .frame(width: 35, height: 35)
-            .background(
-                Circle()
-                    .fill(isToday ? Color("BackgroundCream") : Color.clear)
-                    .overlay(
-                        Circle()
-                            .stroke(isToday ? Color("PrimaryBrown") : Color.clear, lineWidth: 1.5)
-                    )
-            )
+                        .fill(backgroundFillColor)
+                        .overlay(
+                            Circle()
+                                .stroke(isToday ? Color("PrimaryBrown") : Color.clear, lineWidth: 1.5)
+                        )
+                )
         }
         .disabled(!isCurrentMonth)
     }
@@ -39,10 +30,23 @@ struct CalendarDayView: View {
     private var textColor: Color {
         if !isCurrentMonth {
             return Color.gray.opacity(0.5)
-        } else if isToday {
-            return Color("PrimaryBrown")
+        } else if isToday || hasEntry {
+            return Color.white
         } else {
             return Color.primary
+        }
+    }
+    
+    // 背景色を決定
+    private var backgroundFillColor: Color {
+        if !isCurrentMonth {
+            return Color.clear
+        } else if isToday {
+            return Color("PrimaryBrown").opacity(0.7)
+        } else if hasEntry {
+            return Color("PrimaryBrown")
+        } else {
+            return Color.clear
         }
     }
 }

@@ -7,6 +7,15 @@ struct SOAPInputView: View {
     @Binding var prayerCompleted: Bool
     
     @State private var showingPrayerTimer = false
+    @State private var showingSavedAlert = false
+    
+    // DevotionManagerを環境変数から取得
+    @EnvironmentObject var devotionManager: DevotionManager
+    
+    // SOAPの入力が有効かどうかを判定する計算プロパティ
+    private var isSOAPInputValid: Bool {
+        !scripture.isEmpty && !observation.isEmpty && !application.isEmpty
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -32,6 +41,7 @@ struct SOAPInputView: View {
             VStack(alignment: .leading, spacing: 8) {
                 Text(NSLocalizedString("prayer", comment: "Prayer section title"))
                     .font(.headline)
+                    .foregroundColor(Color("PrimaryBrown"))
                 
                 if prayerCompleted {
                     HStack {
@@ -55,19 +65,33 @@ struct SOAPInputView: View {
                     Button(action: {
                         showingPrayerTimer = true
                     }) {
-                        Text("祈りを始める")
+                        Text(NSLocalizedString("start_prayer", comment: "Start prayer button"))
                             .foregroundColor(.white)
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(Color("PrimaryBrown"))
+                            .background(isSOAPInputValid ? Color("PrimaryBrown") : Color.gray)
                             .cornerRadius(8)
                     }
+                    .disabled(!isSOAPInputValid)
                 }
             }
         }
         .padding()
         .sheet(isPresented: $showingPrayerTimer) {
             PrayerTimerView(prayerCompleted: $prayerCompleted)
+        }
+        .onChange(of: prayerCompleted) { completed in
+            if completed {
+                // 祈りが完了したら自動保存
+                saveEntry()
+            }
+        }
+        .alert(isPresented: $showingSavedAlert) {
+            Alert(
+                title: Text(NSLocalizedString("entry_saved", comment: "Entry saved alert title")),
+                message: Text(NSLocalizedString("devotion_saved_message", comment: "Your devotion has been saved")),
+                dismissButton: .default(Text(NSLocalizedString("ok", comment: "OK button")))
+            )
         }
     }
     
@@ -101,6 +125,20 @@ struct SOAPInputView: View {
     }
 }
 
+extension SOAPInputView {
+    // エントリーを保存する関数
+    private func saveEntry() {
+        devotionManager.createEntry(
+            scripture: scripture,
+            observation: observation,
+            application: application,
+            prayerCompleted: prayerCompleted
+        )
+        
+        showingSavedAlert = true
+    }
+}
+
 struct SOAPInputView_Previews: PreviewProvider {
     static var previews: some View {
         SOAPInputView(
@@ -109,5 +147,6 @@ struct SOAPInputView_Previews: PreviewProvider {
             application: .constant(""),
             prayerCompleted: .constant(false)
         )
+        .environmentObject(DevotionManager(context: PersistenceController.preview.container.viewContext))
     }
 }

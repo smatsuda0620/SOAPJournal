@@ -3,10 +3,11 @@ import SwiftUI
 struct PrayerTimerView: View {
     @Environment(\.presentationMode) var presentationMode
     @Binding var prayerCompleted: Bool
-    @State private var isTimerRunning = false
+    @State private var isTimerRunning = true // 自動的に開始するように変更
     @State private var showCompleteButton = false
     @State private var timerProgress: CGFloat = 0.0
     @State private var timerValue: Int = 3 // 3秒のタイマー
+    @State private var scale: CGFloat = 1.0 // アニメーション用のスケール
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
@@ -53,6 +54,8 @@ struct PrayerTimerView: View {
                             .font(.system(size: 80))
                             .fontWeight(.bold)
                             .foregroundColor(Color("PrimaryBrown"))
+                            .scaleEffect(scale)
+                            .animation(.easeInOut(duration: 1), value: scale)
                     }
                 }
                 .frame(width: 250, height: 250)
@@ -85,8 +88,17 @@ struct PrayerTimerView: View {
         .onReceive(timer) { _ in
             if isTimerRunning {
                 if timerValue > 0 {
+                    // スケールを1に戻して新しい数字でアニメーションを開始
+                    scale = 1.0
+                    
+                    // タイマー更新
                     timerValue -= 1
                     timerProgress = CGFloat(3 - timerValue) / 3.0
+                    
+                    // 縮小アニメーションを開始
+                    withAnimation(.easeInOut(duration: 0.9)) {
+                        scale = 0.6
+                    }
                 } else {
                     isTimerRunning = false
                     showCompleteButton = true

@@ -44,19 +44,9 @@ struct TodayView: View {
                     application: $application,
                     prayerCompleted: $prayerCompleted
                 )
+                .environmentObject(devotionManager)
                 
-                // 保存ボタン
-                Button(action: saveEntry) {
-                    Text(NSLocalizedString("save_entry", comment: "Save button"))
-                        .font(.headline)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color("PrimaryBrown"))
-                        .cornerRadius(10)
-                }
-                .padding(.top)
+                // 保存ボタンは削除 - 祈りが完了すると自動保存
             }
             .padding()
         }
