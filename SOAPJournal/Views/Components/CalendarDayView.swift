@@ -18,14 +18,18 @@ struct CalendarDayView: View {
                 // エントリーの有無を表すインジケーター
                 if hasEntry {
                     Circle()
-                        .fill(Color.blue)
+                        .fill(Color("Colors/PrimaryBrown"))
                         .frame(width: 8, height: 8)
                 }
             }
             .frame(width: 35, height: 35)
             .background(
                 Circle()
-                    .fill(isToday ? Color.blue.opacity(0.2) : Color.clear)
+                    .fill(isToday ? Color("Colors/BackgroundCream") : Color.clear)
+                    .overlay(
+                        Circle()
+                            .stroke(isToday ? Color("Colors/PrimaryBrown") : Color.clear, lineWidth: 1.5)
+                    )
             )
         }
         .disabled(!isCurrentMonth)
@@ -36,7 +40,7 @@ struct CalendarDayView: View {
         if !isCurrentMonth {
             return Color.gray.opacity(0.5)
         } else if isToday {
-            return Color.blue
+            return Color("Colors/PrimaryBrown")
         } else {
             return Color.primary
         }

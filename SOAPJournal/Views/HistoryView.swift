@@ -11,13 +11,27 @@ struct HistoryView: View {
                 if devotionManager.allEntries.isEmpty {
                     // 記録がない場合の表示
                     VStack {
-                        Text(NSLocalizedString("no_entries", comment: "No entries message"))
-                            .font(.headline)
-                            .foregroundColor(.secondary)
-                            .padding()
+                        Spacer()
+                        
+                        VStack(spacing: 20) {
+                            Image(systemName: "book.closed")
+                                .font(.system(size: 60))
+                                .foregroundColor(Color("Colors/PrimaryBrown").opacity(0.7))
+                            
+                            Text(NSLocalizedString("no_entries", comment: "No entries message"))
+                                .font(.headline)
+                                .foregroundColor(Color("Colors/PrimaryBrown"))
+                        }
+                        .padding(40)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(Color("Colors/BackgroundCream"))
+                        )
                         
                         Spacer()
                     }
+                    .frame(maxWidth: .infinity)
+                    .background(Color.white)
                 } else {
                     // エントリー一覧
                     List {
@@ -28,11 +42,23 @@ struct HistoryView: View {
                                     selectedEntry = entry
                                     showingDetail = true
                                 }
+                                .listRowSeparator(.hidden)
+                                .listRowBackground(Color.clear)
                         }
                     }
+                    .listStyle(PlainListStyle())
+                    .background(Color("Colors/BackgroundCream").opacity(0.5))
                 }
             }
             .navigationTitle(NSLocalizedString("history", comment: "History tab title"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(NSLocalizedString("history", comment: "History tab title"))
+                        .font(.headline)
+                        .foregroundColor(Color("Colors/PrimaryBrown"))
+                }
+            }
             .onAppear {
                 devotionManager.fetchAllEntries()
             }
@@ -51,6 +77,7 @@ struct HistoryView: View {
                 // 日付
                 Text(entry.date.displayString)
                     .font(.headline)
+                    .foregroundColor(Color("Colors/PrimaryBrown"))
                 
                 Spacer()
                 
@@ -58,9 +85,10 @@ struct HistoryView: View {
                 if entry.date.isToday {
                     Text(NSLocalizedString("today", comment: "Today badge"))
                         .font(.caption)
+                        .fontWeight(.bold)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .background(Color.blue)
+                        .background(Color("Colors/PrimaryBrown"))
                         .foregroundColor(.white)
                         .cornerRadius(8)
                 }
@@ -70,10 +98,11 @@ struct HistoryView: View {
             if !entry.scripture.isEmpty {
                 Text(entry.scripture)
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(Color.primary.opacity(0.7))
                     .lineLimit(2)
                     .truncationMode(.tail)
                     .padding(.top, 4)
+                    .padding(.horizontal, 4)
             }
             
             // 聖句から先のコンテンツ有無のインジケーター
@@ -86,7 +115,7 @@ struct HistoryView: View {
                     categoryIndicator(title: "A")
                 }
                 
-                if !entry.prayer.isEmpty {
+                if entry.prayerCompleted {
                     categoryIndicator(title: "P")
                 }
                 
@@ -94,7 +123,14 @@ struct HistoryView: View {
             }
             .padding(.top, 4)
         }
-        .padding(.vertical, 8)
+        .padding(.vertical, 12)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.white)
+                .shadow(color: Color.black.opacity(0.05), radius: 3, x: 0, y: 1)
+        )
+        .padding(.horizontal, 4)
+        .padding(.vertical, 4)
     }
     
     // カテゴリーのインジケーター（O/A/P）
@@ -102,11 +138,16 @@ struct HistoryView: View {
         Text(title)
             .font(.caption)
             .fontWeight(.bold)
+            .foregroundColor(Color("Colors/PrimaryBrown"))
             .padding(.horizontal, 6)
             .padding(.vertical, 2)
             .background(
                 Circle()
-                    .fill(Color.gray.opacity(0.2))
+                    .fill(Color("Colors/BackgroundCream"))
+                    .overlay(
+                        Circle()
+                            .stroke(Color("Colors/PrimaryBrown").opacity(0.3), lineWidth: 1)
+                    )
             )
     }
 }

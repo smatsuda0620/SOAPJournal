@@ -16,7 +16,7 @@ struct PrayerTimerView: View {
                 .edgesIgnoringSafeArea(.all)
             
             VStack(spacing: 30) {
-                Text("祈りの時間")
+                Text(NSLocalizedString("prayer_time", comment: "Prayer time title"))
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(Color("Colors/PrimaryBrown"))
@@ -39,7 +39,7 @@ struct PrayerTimerView: View {
                             prayerCompleted = true
                             presentationMode.wrappedValue.dismiss()
                         }) {
-                            Text("完了")
+                            Text(NSLocalizedString("complete", comment: "Complete button"))
                                 .font(.title)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
@@ -61,7 +61,7 @@ struct PrayerTimerView: View {
                     Button(action: {
                         isTimerRunning = true
                     }) {
-                        Text("祈りを始める")
+                        Text(NSLocalizedString("start_prayer", comment: "Start prayer button"))
                             .font(.title)
                             .fontWeight(.bold)
                             .foregroundColor(.white)
@@ -75,7 +75,7 @@ struct PrayerTimerView: View {
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
                 }) {
-                    Text("キャンセル")
+                    Text(NSLocalizedString("cancel", comment: "Cancel button"))
                         .foregroundColor(Color("Colors/PrimaryBrown"))
                         .padding()
                 }

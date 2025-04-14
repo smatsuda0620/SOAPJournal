@@ -13,17 +13,29 @@ struct TodayView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                // タイトル
-                Text(NSLocalizedString("today_devotion", comment: "Today's devotion title"))
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .foregroundColor(Color("Colors/PrimaryBrown"))
-                    .padding(.top)
-                
-                // 今日の日付
-                Text(Date().displayString)
-                    .font(.headline)
-                    .foregroundColor(Color("Colors/PrimaryBrown").opacity(0.8))
+                ZStack(alignment: .topLeading) {
+                    // ヘッダーの背景
+                    Rectangle()
+                        .fill(Color("Colors/BackgroundCream"))
+                        .frame(height: 100)
+                        .cornerRadius(12)
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        // タイトル
+                        Text(NSLocalizedString("today_devotion", comment: "Today's devotion title"))
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color("Colors/PrimaryBrown"))
+                            .padding(.top, 8)
+                        
+                        // 今日の日付
+                        Text(Date().displayString)
+                            .font(.headline)
+                            .foregroundColor(Color("Colors/PrimaryBrown").opacity(0.8))
+                    }
+                    .padding(.horizontal, 16)
+                }
+                .padding(.bottom, 8)
                 
                 // SOAPフォーム
                 SOAPInputView(
@@ -52,6 +64,7 @@ struct TodayView: View {
         .alert(isPresented: $showingSavedAlert) {
             Alert(
                 title: Text(NSLocalizedString("entry_saved", comment: "Entry saved alert title")),
+                message: Text(NSLocalizedString("devotion_saved_message", comment: "Your devotion has been saved")),
                 dismissButton: .default(Text(NSLocalizedString("ok", comment: "OK button")))
             )
         }

@@ -103,7 +103,9 @@ struct EntryDetailView: View {
                                 Image(systemName: entry.prayerCompleted ? "checkmark.circle.fill" : "circle")
                                     .foregroundColor(entry.prayerCompleted ? Color("Colors/PrimaryBrown") : .gray)
                                     .font(.title2)
-                                Text(entry.prayerCompleted ? "祈りを完了しました" : "祈りは記録されていません")
+                                Text(entry.prayerCompleted ? 
+                                      NSLocalizedString("prayer_completed", comment: "Prayer completed message") : 
+                                      NSLocalizedString("prayer_not_recorded", comment: "Prayer not recorded message"))
                                     .font(.body)
                                     .foregroundColor(.primary)
                             }

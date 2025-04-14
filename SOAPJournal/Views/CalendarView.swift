@@ -16,6 +16,7 @@ struct CalendarView: View {
                 Button(action: { moveMonth(by: -1) }) {
                     Image(systemName: "chevron.left")
                         .font(.title2)
+                        .foregroundColor(Color("Colors/PrimaryBrown"))
                 }
                 
                 Spacer()
@@ -23,12 +24,14 @@ struct CalendarView: View {
                 Text(DateFormatter.monthFormatter.string(from: selectedMonth))
                     .font(.title)
                     .fontWeight(.bold)
+                    .foregroundColor(Color("Colors/PrimaryBrown"))
                 
                 Spacer()
                 
                 Button(action: { moveMonth(by: 1) }) {
                     Image(systemName: "chevron.right")
                         .font(.title2)
+                        .foregroundColor(Color("Colors/PrimaryBrown"))
                 }
             }
             .padding(.horizontal)
@@ -39,7 +42,8 @@ struct CalendarView: View {
                 ForEach(weekdaySymbols, id: \.self) { symbol in
                     Text(symbol)
                         .frame(maxWidth: .infinity)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(Color("Colors/PrimaryBrown").opacity(0.7))
+                        .fontWeight(.medium)
                 }
             }
             .padding(.top, 8)
@@ -88,13 +92,23 @@ struct CalendarView: View {
                     VStack {
                         Text(NSLocalizedString("no_entry_for_date", comment: "No entry for this date"))
                             .font(.headline)
+                            .foregroundColor(Color("Colors/PrimaryBrown"))
                             .padding()
                         
                         Button(NSLocalizedString("close", comment: "Close button")) {
                             showingEntryDetail = false
                         }
+                        .foregroundColor(Color("Colors/PrimaryBrown"))
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color("Colors/PrimaryBrown"), lineWidth: 1)
+                        )
                         .padding()
                     }
+                    .frame(maxWidth: .infinity, maxHeight: 200)
+                    .background(Color("Colors/BackgroundCream"))
+                    .cornerRadius(12)
                 }
             }
         }

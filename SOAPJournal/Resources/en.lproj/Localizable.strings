@@ -12,6 +12,7 @@
 "today_devotion" = "Today's Devotion";
 "save_entry" = "Save";
 "entry_saved" = "Saved Successfully";
+"devotion_saved_message" = "Your devotion has been recorded";
 
 // SOAP sections
 "scripture" = "S: Scripture";
@@ -33,6 +34,13 @@
 "cancel" = "Cancel";
 "save_changes" = "Save Changes";
 "delete" = "Delete";
+
+// Prayer Timer
+"prayer_time" = "Prayer Time";
+"start_prayer" = "Start Prayer";
+"complete" = "Complete";
+"prayer_completed" = "Prayer completed";
+"prayer_not_recorded" = "Prayer not recorded";
 
 // Others
 "ok" = "OK";

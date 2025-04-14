@@ -12,6 +12,7 @@
 "today_devotion" = "今日のデボーション";
 "save_entry" = "保存";
 "entry_saved" = "保存しました";
+"devotion_saved_message" = "デボーションが記録されました";
 
 // SOAPセクション
 "scripture" = "S: 聖句";
@@ -33,6 +34,13 @@
 "cancel" = "キャンセル";
 "save_changes" = "変更を保存";
 "delete" = "削除";
+
+// 祈りタイマー
+"prayer_time" = "祈りの時間";
+"start_prayer" = "祈りを始める";
+"complete" = "完了";
+"prayer_completed" = "祈りを完了しました";
+"prayer_not_recorded" = "祈りは記録されていません";
 
 // その他
 "ok" = "OK";
