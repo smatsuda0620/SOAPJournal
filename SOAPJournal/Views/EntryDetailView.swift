@@ -30,7 +30,7 @@ struct EntryDetailView: View {
                 HStack {
                     Text(entry.date.displayString)
                         .font(.headline)
-                        .foregroundColor(Color("Colors/PrimaryBrown"))
+                        .foregroundColor(Color("PrimaryBrown"))
                     
                     Spacer()
                     
@@ -40,12 +40,12 @@ struct EntryDetailView: View {
                             isEditing = false
                             resetValues()
                         }
-                        .foregroundColor(Color("Colors/PrimaryBrown"))
+                        .foregroundColor(Color("PrimaryBrown"))
                     } else {
                         Button(NSLocalizedString("edit", comment: "Edit button")) {
                             isEditing = true
                         }
-                        .foregroundColor(Color("Colors/PrimaryBrown"))
+                        .foregroundColor(Color("PrimaryBrown"))
                     }
                 }
                 .padding(.horizontal)
@@ -68,7 +68,7 @@ struct EntryDetailView: View {
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color("Colors/PrimaryBrown"))
+                            .background(Color("PrimaryBrown"))
                             .cornerRadius(10)
                     }
                     .padding(.horizontal)
@@ -97,11 +97,11 @@ struct EntryDetailView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             Text(NSLocalizedString("prayer", comment: "Prayer section"))
                                 .font(.headline)
-                                .foregroundColor(Color("Colors/PrimaryBrown"))
+                                .foregroundColor(Color("PrimaryBrown"))
                             
                             HStack {
                                 Image(systemName: entry.prayerCompleted ? "checkmark.circle.fill" : "circle")
-                                    .foregroundColor(entry.prayerCompleted ? Color("Colors/PrimaryBrown") : .gray)
+                                    .foregroundColor(entry.prayerCompleted ? Color("PrimaryBrown") : .gray)
                                     .font(.title2)
                                 Text(entry.prayerCompleted ? 
                                       NSLocalizedString("prayer_completed", comment: "Prayer completed message") : 
@@ -113,7 +113,7 @@ struct EntryDetailView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(
                                 RoundedRectangle(cornerRadius: 8)
-                                    .fill(Color("Colors/BackgroundCream"))
+                                    .fill(Color("BackgroundCream"))
                             )
                         }
                     }
@@ -128,7 +128,7 @@ struct EntryDetailView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(.headline)
-                .foregroundColor(Color("Colors/PrimaryBrown"))
+                .foregroundColor(Color("PrimaryBrown"))
             
             Text(content)
                 .font(.body)
@@ -138,7 +138,7 @@ struct EntryDetailView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(Color("Colors/BackgroundCream"))
+                        .fill(Color("BackgroundCream"))
                 )
         }
     }

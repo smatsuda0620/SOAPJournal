@@ -16,7 +16,7 @@ struct TodayView: View {
                 ZStack(alignment: .topLeading) {
                     // ヘッダーの背景
                     Rectangle()
-                        .fill(Color("Colors/BackgroundCream"))
+                        .fill(Color("BackgroundCream"))
                         .frame(height: 100)
                         .cornerRadius(12)
                     
@@ -25,13 +25,13 @@ struct TodayView: View {
                         Text(NSLocalizedString("today_devotion", comment: "Today's devotion title"))
                             .font(.largeTitle)
                             .fontWeight(.bold)
-                            .foregroundColor(Color("Colors/PrimaryBrown"))
+                            .foregroundColor(Color("PrimaryBrown"))
                             .padding(.top, 8)
                         
                         // 今日の日付
                         Text(Date().displayString)
                             .font(.headline)
-                            .foregroundColor(Color("Colors/PrimaryBrown").opacity(0.8))
+                            .foregroundColor(Color("PrimaryBrown").opacity(0.8))
                     }
                     .padding(.horizontal, 16)
                 }
@@ -53,7 +53,7 @@ struct TodayView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color("Colors/PrimaryBrown"))
+                        .background(Color("PrimaryBrown"))
                         .cornerRadius(10)
                 }
                 .padding(.top)

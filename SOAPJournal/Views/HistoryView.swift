@@ -16,16 +16,16 @@ struct HistoryView: View {
                         VStack(spacing: 20) {
                             Image(systemName: "book.closed")
                                 .font(.system(size: 60))
-                                .foregroundColor(Color("Colors/PrimaryBrown").opacity(0.7))
+                                .foregroundColor(Color("PrimaryBrown").opacity(0.7))
                             
                             Text(NSLocalizedString("no_entries", comment: "No entries message"))
                                 .font(.headline)
-                                .foregroundColor(Color("Colors/PrimaryBrown"))
+                                .foregroundColor(Color("PrimaryBrown"))
                         }
                         .padding(40)
                         .background(
                             RoundedRectangle(cornerRadius: 16)
-                                .fill(Color("Colors/BackgroundCream"))
+                                .fill(Color("BackgroundCream"))
                         )
                         
                         Spacer()
@@ -47,7 +47,7 @@ struct HistoryView: View {
                         }
                     }
                     .listStyle(PlainListStyle())
-                    .background(Color("Colors/BackgroundCream").opacity(0.5))
+                    .background(Color("BackgroundCream").opacity(0.5))
                 }
             }
             .navigationTitle(NSLocalizedString("history", comment: "History tab title"))
@@ -56,7 +56,7 @@ struct HistoryView: View {
                 ToolbarItem(placement: .principal) {
                     Text(NSLocalizedString("history", comment: "History tab title"))
                         .font(.headline)
-                        .foregroundColor(Color("Colors/PrimaryBrown"))
+                        .foregroundColor(Color("PrimaryBrown"))
                 }
             }
             .onAppear {
@@ -77,7 +77,7 @@ struct HistoryView: View {
                 // 日付
                 Text(entry.date.displayString)
                     .font(.headline)
-                    .foregroundColor(Color("Colors/PrimaryBrown"))
+                    .foregroundColor(Color("PrimaryBrown"))
                 
                 Spacer()
                 
@@ -88,7 +88,7 @@ struct HistoryView: View {
                         .fontWeight(.bold)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .background(Color("Colors/PrimaryBrown"))
+                        .background(Color("PrimaryBrown"))
                         .foregroundColor(.white)
                         .cornerRadius(8)
                 }
@@ -138,15 +138,15 @@ struct HistoryView: View {
         Text(title)
             .font(.caption)
             .fontWeight(.bold)
-            .foregroundColor(Color("Colors/PrimaryBrown"))
+            .foregroundColor(Color("PrimaryBrown"))
             .padding(.horizontal, 6)
             .padding(.vertical, 2)
             .background(
                 Circle()
-                    .fill(Color("Colors/BackgroundCream"))
+                    .fill(Color("BackgroundCream"))
                     .overlay(
                         Circle()
-                            .stroke(Color("Colors/PrimaryBrown").opacity(0.3), lineWidth: 1)
+                            .stroke(Color("PrimaryBrown").opacity(0.3), lineWidth: 1)
                     )
             )
     }

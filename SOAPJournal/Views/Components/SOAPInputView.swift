@@ -36,9 +36,9 @@ struct SOAPInputView: View {
                 if prayerCompleted {
                     HStack {
                         Text("祈りを完了しました")
-                            .foregroundColor(Color("Colors/PrimaryBrown"))
+                            .foregroundColor(Color("PrimaryBrown"))
                             .padding()
-                            .background(Color("Colors/BackgroundCream"))
+                            .background(Color("BackgroundCream"))
                             .cornerRadius(8)
                         
                         Spacer()
@@ -48,7 +48,7 @@ struct SOAPInputView: View {
                             prayerCompleted = false
                         }) {
                             Image(systemName: "arrow.counterclockwise")
-                                .foregroundColor(Color("Colors/PrimaryBrown"))
+                                .foregroundColor(Color("PrimaryBrown"))
                         }
                     }
                 } else {
@@ -59,7 +59,7 @@ struct SOAPInputView: View {
                             .foregroundColor(.white)
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(Color("Colors/PrimaryBrown"))
+                            .background(Color("PrimaryBrown"))
                             .cornerRadius(8)
                     }
                 }
@@ -75,7 +75,7 @@ struct SOAPInputView: View {
         VStack(alignment: .leading) {
             Text(title)
                 .font(.headline)
-                .foregroundColor(Color("Colors/PrimaryBrown"))
+                .foregroundColor(Color("PrimaryBrown"))
                 .padding(.bottom, 4)
             
             TextEditor(text: text)
@@ -83,14 +83,14 @@ struct SOAPInputView: View {
                 .padding(8)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color("Colors/PrimaryBrown").opacity(0.3), lineWidth: 1)
-                        .background(Color("Colors/BackgroundCream").cornerRadius(8))
+                        .stroke(Color("PrimaryBrown").opacity(0.3), lineWidth: 1)
+                        .background(Color("BackgroundCream").cornerRadius(8))
                 )
                 .overlay(
                     Group {
                         if text.wrappedValue.isEmpty {
                             Text(placeholder)
-                                .foregroundColor(Color("Colors/PrimaryBrown").opacity(0.5))
+                                .foregroundColor(Color("PrimaryBrown").opacity(0.5))
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 12)
                                 .allowsHitTesting(false)

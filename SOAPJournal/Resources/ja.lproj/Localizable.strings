@@ -42,6 +42,9 @@
 "prayer_completed" = "祈りを完了しました";
 "prayer_not_recorded" = "祈りは記録されていません";
 
+// スプラッシュ画面
+"app_subtitle" = "聖書の学びを記録";
+
 // その他
 "ok" = "OK";
 "close" = "閉じる";

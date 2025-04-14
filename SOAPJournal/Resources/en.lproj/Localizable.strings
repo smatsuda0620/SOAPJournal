@@ -42,6 +42,9 @@
 "prayer_completed" = "Prayer completed";
 "prayer_not_recorded" = "Prayer not recorded";
 
+// Splash Screen
+"app_subtitle" = "Record Your Bible Study";
+
 // Others
 "ok" = "OK";
 "close" = "Close";

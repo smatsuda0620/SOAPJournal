@@ -12,25 +12,25 @@ struct PrayerTimerView: View {
     
     var body: some View {
         ZStack {
-            Color("Colors/BackgroundCream")
+            Color("BackgroundCream")
                 .edgesIgnoringSafeArea(.all)
             
             VStack(spacing: 30) {
                 Text(NSLocalizedString("prayer_time", comment: "Prayer time title"))
                     .font(.largeTitle)
                     .fontWeight(.bold)
-                    .foregroundColor(Color("Colors/PrimaryBrown"))
+                    .foregroundColor(Color("PrimaryBrown"))
                 
                 ZStack {
                     Circle()
                         .stroke(lineWidth: 15)
                         .opacity(0.3)
-                        .foregroundColor(Color("Colors/PrimaryBrown"))
+                        .foregroundColor(Color("PrimaryBrown"))
                     
                     Circle()
                         .trim(from: 0.0, to: timerProgress)
                         .stroke(style: StrokeStyle(lineWidth: 15, lineCap: .round, lineJoin: .round))
-                        .foregroundColor(Color("Colors/PrimaryBrown"))
+                        .foregroundColor(Color("PrimaryBrown"))
                         .rotationEffect(Angle(degrees: 270.0))
                         .animation(.linear, value: timerProgress)
                     
@@ -45,14 +45,14 @@ struct PrayerTimerView: View {
                                 .foregroundColor(.white)
                                 .padding(.vertical, 20)
                                 .padding(.horizontal, 50)
-                                .background(Color("Colors/PrimaryBrown"))
+                                .background(Color("PrimaryBrown"))
                                 .cornerRadius(30)
                         }
                     } else {
                         Text("\(timerValue)")
                             .font(.system(size: 80))
                             .fontWeight(.bold)
-                            .foregroundColor(Color("Colors/PrimaryBrown"))
+                            .foregroundColor(Color("PrimaryBrown"))
                     }
                 }
                 .frame(width: 250, height: 250)
@@ -67,7 +67,7 @@ struct PrayerTimerView: View {
                             .foregroundColor(.white)
                             .padding(.vertical, 20)
                             .padding(.horizontal, 50)
-                            .background(Color("Colors/PrimaryBrown"))
+                            .background(Color("PrimaryBrown"))
                             .cornerRadius(30)
                     }
                 }
@@ -76,7 +76,7 @@ struct PrayerTimerView: View {
                     presentationMode.wrappedValue.dismiss()
                 }) {
                     Text(NSLocalizedString("cancel", comment: "Cancel button"))
-                        .foregroundColor(Color("Colors/PrimaryBrown"))
+                        .foregroundColor(Color("PrimaryBrown"))
                         .padding()
                 }
             }
