@@ -1,5 +1,6 @@
 import SwiftUI
 import CoreData
+import CloudKit
 
 @main
 struct SOAPJournalApp: App {
