@@ -34,6 +34,8 @@ jobs:
     needs: check_api_keys
     if: ${{ needs.check_api_keys.outputs.has_api_keys == 'true' }}
     runs-on: macos-latest
+    env:
+      BUNDLE_IDENTIFIER: com.steamside-tree.soapjournal
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
