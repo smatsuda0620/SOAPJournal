@@ -24,6 +24,7 @@ jobs:
       - name: Set up Bundler
         run: |
           gem install bundler -N
+          source "https://rubygems.org"
           gem "fastlane"
           bundle install --jobs 4 --retry 3
 
