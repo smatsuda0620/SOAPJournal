@@ -1,61 +1,96 @@
 #!/bin/bash
 
-# SOAPジャーナル - デプロイスクリプト
-# GitHub Actionsワークフローを手動でトリガーするスクリプト
+# エラーが発生したら即座に終了
+set -e
 
-echo "🚀 SOAPジャーナル - デプロイプロセス開始 🚀"
-echo "-------------------------------------------"
-echo "GitHub Actionsワークフローをトリガーして、アプリをビルドしTestFlightに配信します。"
-echo ""
+echo "🚀 SOAPJournal TestFlightデプロイスクリプト 🚀"
+echo "==============================================="
 
-# GitHub Token確認
-if [ -z "$GITHUB_TOKEN" ]; then
-  echo "❌ エラー: GitHub Tokenが設定されていません。"
-  echo "GitHubへの認証に必要なトークンを設定してください。"
-  exit 1
-fi
+# 必要なツールの確認
+check_dependencies() {
+  echo "📋 依存関係を確認中..."
+  
+  if ! command -v ruby &> /dev/null; then
+    echo "❌ Rubyがインストールされていません。"
+    exit 1
+  fi
+  
+  if ! command -v bundle &> /dev/null; then
+    echo "📦 Bundlerをインストールしています..."
+    gem install bundler -N
+  fi
+  
+  if ! command -v xcodebuild &> /dev/null; then
+    echo "❌ Xcodeがインストールされていないか、パスが通っていません。"
+    exit 1
+  fi
+  
+  echo "✅ 依存関係の確認完了"
+}
 
-# リポジトリ情報
-REPO_OWNER="smatsuda0620"
-REPO_NAME="SOAPJournal"
-WORKFLOW_ID="ios-deploy.yml"
-BRANCH="main"
+# 環境変数の確認
+check_environment() {
+  echo "🔑 API環境変数を確認中..."
+  
+  local missing_keys=()
+  
+  if [ -z "$APP_STORE_CONNECT_API_KEY_ID" ]; then
+    missing_keys+=("APP_STORE_CONNECT_API_KEY_ID")
+  fi
+  
+  if [ -z "$APP_STORE_CONNECT_API_KEY_ISSUER_ID" ]; then
+    missing_keys+=("APP_STORE_CONNECT_API_KEY_ISSUER_ID")
+  fi
+  
+  if [ -z "$APP_STORE_CONNECT_API_KEY_CONTENT" ]; then
+    missing_keys+=("APP_STORE_CONNECT_API_KEY_CONTENT")
+  fi
+  
+  if [ ${#missing_keys[@]} -gt 0 ]; then
+    echo "❌ 以下の環境変数が設定されていません:"
+    for key in "${missing_keys[@]}"; do
+      echo "  - $key"
+    done
+    echo ""
+    echo "⚠️ GITHUB_ACTIONS_SETUP.mdを参照して、必要なAPIキーを設定してください。"
+    echo "⚠️ または、GitHub Actionsでデプロイすることをお勧めします。"
+    exit 1
+  fi
+  
+  echo "✅ 環境変数の確認完了"
+}
 
-# 現在の時刻を取得（デプロイのリファレンス用）
-TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+# Gemfileの依存関係インストール
+install_dependencies() {
+  echo "📦 依存関係をインストール中..."
+  bundle check || bundle install
+  echo "✅ 依存関係のインストール完了"
+}
 
-echo "📋 デプロイ情報:"
-echo "リポジトリ: $REPO_OWNER/$REPO_NAME"
-echo "ブランチ: $BRANCH"
-echo "ワークフローID: $WORKFLOW_ID"
-echo "タイムスタンプ: $TIMESTAMP"
-echo ""
+# Fastlaneを使ったデプロイ
+deploy_with_fastlane() {
+  echo "🚀 TestFlightへデプロイを開始します..."
+  
+  # 実行前デバッグ情報を表示
+  bundle exec fastlane debug_info || true
+  
+  # TestFlightにデプロイ
+  bundle exec fastlane beta
+  
+  echo "✅ TestFlightへのデプロイが完了しました！"
+}
 
-echo "🔄 GitHub Actionsワークフローをトリガー中..."
-
-# GitHub API を使用してワークフローディスパッチイベントをトリガー
-RESPONSE=$(curl -s -X POST \
-  -H "Authorization: token $GITHUB_TOKEN" \
-  -H "Accept: application/vnd.github.v3+json" \
-  "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/actions/workflows/$WORKFLOW_ID/dispatches" \
-  -d "{\"ref\":\"$BRANCH\", \"inputs\": {\"deploy_reference\":\"replit_deploy_$TIMESTAMP\"}}")
-
-# レスポンスコードを確認
-if [ $? -eq 0 ]; then
-  echo "✅ デプロイリクエストが送信されました！"
+# メイン実行
+main() {
+  check_dependencies
+  check_environment
+  install_dependencies
+  deploy_with_fastlane
+  
   echo ""
-  echo "GitHub Actionsワークフローがトリガーされました。"
-  echo "ビルドとデプロイの進行状況は、GitHubリポジトリの'Actions'タブで確認できます:"
-  echo "https://github.com/$REPO_OWNER/$REPO_NAME/actions"
-  echo ""
-  echo "🔔 注意: ビルドとデプロイには約10〜15分かかる場合があります。"
-  echo "完了すると、TestFlightでアプリの新しいバージョンが利用可能になります。"
-else
-  echo "❌ エラー: デプロイリクエストの送信に失敗しました。"
-  echo "レスポンス: $RESPONSE"
-  echo ""
-  echo "以下を確認してください:"
-  echo "- GITHUB_TOKENが有効である"
-  echo "- リポジトリ名とブランチ名が正しい"
-  echo "- ワークフローファイルが存在する"
-fi
+  echo "🎉 SOAPJournalアプリのデプロイプロセスが完了しました！"
+  echo "TestFlight経由でアプリを確認できます。"
+}
+
+# スクリプト実行
+main
