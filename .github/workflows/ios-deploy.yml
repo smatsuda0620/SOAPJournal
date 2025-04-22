@@ -33,15 +33,21 @@ jobs:
 
       - name: Upload to TestFlight
         env:
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          TEAM_ID: ${{ secrets.TEAM_ID }}
-          ITC_TEAM_ID: ${{ secrets.ITC_TEAM_ID }}
-          APPLE_APP_ID: ${{ secrets.APPLE_APP_ID }}
-          PROVISIONING_PROFILE_UUID: ${{ secrets.PROVISIONING_PROFILE_UUID }}
-          PROVISIONING_PROFILE_NAME: ${{ secrets.PROVISIONING_PROFILE_NAME }}
+          # App Store Connect APIキー (必須)
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+          
+          # Apple ID (APIキーでの認証時はオプショナル)
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          
+          # 以下はAPIから自動取得されるようになったため、手動設定時のみ使用
+          TEAM_ID: ${{ secrets.TEAM_ID }}
+          APPLE_APP_ID: ${{ secrets.APPLE_APP_ID }}
+          ITC_TEAM_ID: ${{ secrets.ITC_TEAM_ID }}
+          
+          # カスタムバンドルIDを使用する場合のみ設定
+          # BUNDLE_IDENTIFIER: ${{ secrets.BUNDLE_IDENTIFIER }}
         run: |
           bundle exec fastlane beta
         
@@ -52,3 +58,13 @@ jobs:
           path: |
             ./build/*.ipa
             ./build/*.dSYM.zip
+            
+      - name: Post build status
+        if: always()
+        run: |
+          if [ ${{ job.status }} == 'success' ]; then
+            echo "✅ ビルドとTestFlightへのアップロードが成功しました！"
+            echo "TestFlight経由でアプリをテストできます。"
+          else
+            echo "❌ ビルドが失敗しました。ログを確認してください。"
+          fi

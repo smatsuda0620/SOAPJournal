@@ -1,6 +1,15 @@
-app_identifier("com.yourcompany.SOAPJournal") # バンドルIDを実際のものに置き換えてください
-apple_id(ENV["APPLE_ID"]) # 環境変数から Apple ID を取得
-team_id(ENV["TEAM_ID"]) # 環境変数から Team ID を取得
+# このAppfileでは環境変数からの情報取得を優先し、ハードコードされた値は使用しません
+# API Keyから多くの情報が自動的に取得されるようになっています
 
-# アプリストアコネクトの情報
-itc_team_id(ENV["ITC_TEAM_ID"]) # 環境変数からiTunes Connect チームIDを取得（オプション）
+# バンドルID - Info.plistから自動取得またはビルド時に指定
+app_identifier(ENV["BUNDLE_IDENTIFIER"] || "com.yourcompany.SOAPJournal") 
+
+# Apple ID - 環境変数から取得
+# 注意: App Store Connect API Keyを使用している場合、apple_idは必須ではありません
+apple_id(ENV["APPLE_ID"])
+
+# Team ID - API Keyから自動取得または環境変数から取得
+team_id(ENV["TEAM_ID"])
+
+# iTunes Connect Team ID (オプション) - 複数チームがある場合のみ必要
+itc_team_id(ENV["ITC_TEAM_ID"]) if ENV["ITC_TEAM_ID"]

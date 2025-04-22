@@ -7,30 +7,85 @@ platform :ios do
     # 必要な依存関係があればインストールする処理
   end
 
+  # App Store Connect API認証と情報の取得
+  desc "Setup App Store Connect API and get app details"
+  lane :setup_api_and_get_details do
+    # App Store Connect APIキーの設定 - これにより多くの情報が自動取得可能になる
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
+      key_content: ENV["APP_STORE_CONNECT_API_KEY_CONTENT"],
+      in_house: false, # Enterpriseアカウントの場合はtrueに設定
+      duration: 1200, # トークンの有効期限（秒）
+      is_key_content_base64: false
+    )
+
+    # アプリのバンドルIDを取得（Info.plistから）
+    bundle_id = get_info_plist_value(path: "./SOAPJournal/Info.plist", key: "CFBundleIdentifier")
+    ENV["BUNDLE_IDENTIFIER"] = bundle_id
+    UI.success("Bundle ID: #{bundle_id}")
+
+    # チームIDを自動取得（Apple Developer Portalから）- APIキーに関連付けられたチーム
+    begin
+      team_id = Spaceship::ConnectAPI::Team.all.first.id
+      ENV["TEAM_ID"] = team_id
+      UI.success("Team ID: #{team_id}")
+    rescue => ex
+      UI.error("Team IDの自動取得に失敗しました: #{ex}")
+      UI.error("TEAM_ID環境変数を手動で設定してください")
+    end
+
+    # アプリIDを自動取得（App名またはバンドルIDから）
+    begin
+      app = Spaceship::ConnectAPI::App.find(bundle_id)
+      if app
+        ENV["APPLE_APP_ID"] = app.id
+        UI.success("App ID: #{app.id} (Name: #{app.name})")
+      else
+        UI.error("App IDの自動取得に失敗しました")
+        UI.error("APPLE_APP_ID環境変数を手動で設定してください")
+      end
+    rescue => ex
+      UI.error("App IDの検索中にエラーが発生しました: #{ex}")
+      UI.error("APPLE_APP_ID環境変数を手動で設定してください")
+    end
+  end
+
   # ビルドとアーカイブ用のレーン
   desc "Build and archive the app"
   lane :build_and_archive do
-    # プロビジョニングプロファイルとコード署名を設定
+    # APIキーの設定と情報の取得
+    setup_api_and_get_details
+
+    # プロビジョニングプロファイルを自動取得（自動マネージドプロビジョニングを使用）
+    sigh(
+      api_key: lane_context[SharedValues::APP_STORE_CONNECT_API_KEY],
+      app_identifier: ENV["BUNDLE_IDENTIFIER"] || "com.yourcompany.SOAPJournal",
+      readonly: true, # 既存のプロファイルのみ使用
+      team_id: ENV["TEAM_ID"]
+    )
+
+    # ビルド設定の更新
     update_code_signing_settings(
       use_automatic_signing: false,
       path: "SOAPJournal.xcodeproj",
       team_id: ENV["TEAM_ID"],
       code_sign_identity: "iPhone Distribution",
-      profile_uuid: ENV["PROVISIONING_PROFILE_UUID"],
-      profile_name: ENV["PROVISIONING_PROFILE_NAME"],
-      bundle_identifier: "com.yourcompany.SOAPJournal" # アプリのバンドルIDに置き換えてください
+      profile_name: lane_context[SharedValues::SIGH_NAME],
+      bundle_identifier: ENV["BUNDLE_IDENTIFIER"] || "com.yourcompany.SOAPJournal"
+    )
+
+    # バージョン番号とビルド番号を自動インクリメント
+    increment_build_number(
+      build_number: latest_testflight_build_number + 1
     )
 
     # iOSアプリをビルドしてアーカイブ
     build_app(
       scheme: "SOAPJournal",
       export_method: "app-store",
-      export_options: {
-        provisioningProfiles: {
-          "com.yourcompany.SOAPJournal" => ENV["PROVISIONING_PROFILE_NAME"]
-        }
-      },
-      skip_profile_detection: true,
+      export_team_id: ENV["TEAM_ID"],
+      skip_profile_detection: false,
       output_directory: "./build",
       archive_path: "./build/SOAPJournal.xcarchive"
     )
@@ -39,21 +94,18 @@ platform :ios do
   # TestFlightへのアップロード用のレーン
   desc "Upload to TestFlight"
   lane :beta do
-    # App Store Connectの認証
-    app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
-      key_content: ENV["APP_STORE_CONNECT_API_KEY_CONTENT"],
-      in_house: false # Enterpriseアカウントの場合はtrueに設定
-    )
-
-    # アプリをビルドしてアーカイブ
+    # アプリをビルドしてアーカイブ（APIキー設定も含む）
     build_and_archive
 
     # TestFlightにアップロード
     upload_to_testflight(
+      api_key: lane_context[SharedValues::APP_STORE_CONNECT_API_KEY],
       skip_waiting_for_build_processing: true,
-      apple_id: ENV["APPLE_APP_ID"] # App Store Connectで取得したApple IDに置き換えてください
+      app_identifier: ENV["BUNDLE_IDENTIFIER"] || "com.yourcompany.SOAPJournal",
+      apple_id: ENV["APPLE_APP_ID"],
+      distribute_external: true, # 外部テスターにも配布する
+      notify_external_testers: true, # テスターに通知を送信
+      changelog: "最新のテストビルド"
     )
   end
 end
