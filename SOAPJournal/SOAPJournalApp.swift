@@ -35,8 +35,7 @@ class PersistenceController {
             date: today,
             scripture: "ヨハネ3:16 神は、実に、そのひとり子をお与えになったほどに世を愛された。それは御子を信じる者が、一人として滅びることなく、永遠のいのちを持つためである。",
             observation: "神様は世を愛するために最高の犠牲を払った。神の愛は無条件で、誰にでも与えられる。",
-            application: "神様の無条件の愛を受け入れ、周りの人たちにもその愛を示していきたい。",
-            prayer: "神様、あなたの深い愛に感謝します。私もあなたの愛を実践できるよう導いてください。"
+            application: "神様の無条件の愛を受け入れ、周りの人たちにもその愛を示していきたい。"
         )
         
         // 昨日のエントリー
@@ -45,8 +44,7 @@ class PersistenceController {
             date: calendar.date(byAdding: .day, value: -1, to: today)!,
             scripture: "詩篇23:1 主は私の羊飼い。私は、乏しいことがありません。",
             observation: "神様は羊飼いのように私たちを導き、必要なものをすべて与えてくださる。",
-            application: "不安や心配があっても、神様が導いてくださると信頼する。",
-            prayer: "主よ、あなたの導きに感謝します。信仰の目で前を見て歩めるよう助けてください。"
+            application: "不安や心配があっても、神様が導いてくださると信頼する。"
         )
         
         // 先週のエントリー
@@ -55,8 +53,7 @@ class PersistenceController {
             date: calendar.date(byAdding: .day, value: -7, to: today)!,
             scripture: "マタイ5:14-16 あなたがたは、世界の光です...",
             observation: "クリスチャンは世の光として生きる責任がある。",
-            application: "日常生活の中で、キリストの光を輝かせる方法を考えよう。",
-            prayer: "神様、あなたの光を世に示せるよう助けてください。"
+            application: "日常生活の中で、キリストの光を輝かせる方法を考えよう。"
         )
         
         do {
