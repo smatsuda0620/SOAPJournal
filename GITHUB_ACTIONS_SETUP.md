@@ -1,88 +1,58 @@
-# GitHub Actions による自動ビルド・配信セットアップ手順
+# GitHub Actions を使った TestFlight 自動デプロイのセットアップ
 
-このドキュメントでは、SOAPジャーナルアプリをGitHub ActionsでビルドしてTestFlightに自動配信するためのセットアップ手順を説明します。
+このドキュメントでは、GitHub Actions を使って SOAPJournal アプリを TestFlight に自動的にデプロイするための設定手順を説明します。
 
-## 前提条件
+## 必要なシークレット
 
-1. Apple Developer Programメンバーシップ（年間$99）
-2. App Store Connectにアプリが登録済みであること
-3. 署名証明書とプロビジョニングプロファイルの準備
-4. App Store ConnectのAPIキー
+GitHub リポジトリに以下のシークレットを追加する必要があります。これらのシークレットは GitHub リポジトリの `Settings > Secrets and variables > Actions` から設定できます。
 
-## GitHub Secretsの設定
+### 基本的なApple開発者アカウント情報
+- `APPLE_ID`: Apple ID（例: `example@example.com`）
+- `TEAM_ID`: Apple Developer Team ID（例: `ABCDE12345`）
+- `ITC_TEAM_ID`: iTunes Connect Team ID（マルチチームの場合のみ必要）
 
-以下のシークレットをリポジトリ設定の「Settings > Secrets and variables > Actions」に追加する必要があります：
+### アプリ情報
+- `APPLE_APP_ID`: App Store Connect のアプリID（数字）
+- `PROVISIONING_PROFILE_UUID`: プロビジョニングプロファイルのUUID
+- `PROVISIONING_PROFILE_NAME`: プロビジョニングプロファイルの名前
 
-| シークレット名 | 説明 |
-|--------------|------|
-| `BUILD_CERTIFICATE_BASE64` | 配布証明書をBase64エンコードしたもの |
-| `P12_PASSWORD` | 証明書のパスワード |
-| `KEYCHAIN_PASSWORD` | キーチェーン用の一時パスワード（任意の値） |
-| `PROVISIONING_PROFILE_BASE64` | プロビジョニングプロファイルをBase64エンコードしたもの |
-| `DEVELOPER_APP_ID` | App Store ConnectのアプリID |
-| `DEVELOPER_APP_IDENTIFIER` | アプリのバンドルID（例：com.yourname.soapjournal） |
-| `PROVISIONING_PROFILE_SPECIFIER` | プロビジョニングプロファイルの名前 |
-| `APPLE_TEAM_ID` | Apple Developer TeamのID |
-| `APPLE_API_KEY_ID` | App Store Connect APIキーのID |
-| `APPLE_API_ISSUER_ID` | App Store Connect APIキーの発行者ID |
-| `APPLE_API_KEY_CONTENT` | APIキー(.p8ファイル)の内容をBase64エンコードしたもの |
+### App Store Connect API キー
+- `APP_STORE_CONNECT_API_KEY_ID`: App Store Connect API キーID
+- `APP_STORE_CONNECT_API_KEY_ISSUER_ID`: App Store Connect API 発行者ID
+- `APP_STORE_CONNECT_API_KEY_CONTENT`: App Store Connect API キーの内容 (P8ファイルの内容)
 
-## 証明書とプロファイルのエンコード方法
+## App Store Connect API キーの作成手順
 
-ターミナルで以下のコマンドを実行して、証明書とプロビジョニングプロファイルをBase64エンコードします：
+1. [App Store Connect](https://appstoreconnect.apple.com/) にログイン
+2. `ユーザーとアクセス > キー > App Store Connect API` に移動
+3. `+` ボタンをクリックして新しいキーを作成
+4. キーの名前を入力し、アクセスレベルを選択（通常は `App Manager` 以上が必要）
+5. キーを生成して、P8ファイルをダウンロード
+6. キーID、発行者ID、P8ファイルの内容を GitHub シークレットとして保存
 
-```bash
-# 配布証明書のエンコード
-base64 -i Distribution.p12 | pbcopy
+## プロビジョニングプロファイルの準備
 
-# プロビジョニングプロファイルのエンコード
-base64 -i profile.mobileprovision | pbcopy
-```
-
-## App Store Connect APIキーの取得
-
-1. App Store Connectにログイン
-2. 「ユーザーとアクセス」>「キー」タブを選択
-3. 「+」ボタンをクリックして新しいキーを生成
-4. キー名を入力し、アクセス権を「App Manager」に設定
-5. 「生成」をクリック
-6. ダウンロードしたAPIキー(.p8ファイル)を保存
-7. キーIDと発行者IDをメモ
-
-APIキーの内容をBase64エンコード：
-```bash
-base64 -i AuthKey_XXXXXXXX.p8 | pbcopy
-```
-
-## プロジェクト構造の調整
-
-GitHub Actionsでビルドする前に、リポジトリのファイル構造がXcodeプロジェクト形式に合わせて正しく設定されていることを確認してください。必要に応じて、ワークフローファイル内の以下の部分を調整します：
-
-```yaml
-- name: Prepare Xcode Project
-  run: |
-    # ここでプロジェクト構造を調整
-    # ...
-```
+1. [Apple Developer Portal](https://developer.apple.com/account/) にログイン
+2. `Certificates, Identifiers & Profiles > Profiles` に移動
+3. App Store 用のプロビジョニングプロファイルを作成または更新
+4. プロファイルをダウンロードして開き、UUID と名前を確認（Xcode でも確認可能）
 
 ## ワークフローの実行
 
-全てのシークレットとファイルを設定した後：
+上記のシークレットをすべて設定した後、以下のいずれかの方法でワークフローを実行できます：
 
-1. コードをpushすると自動的にワークフローが実行されます
-2. または「Actions」タブから手動でワークフローを実行できます（workflow_dispatch）
+1. `main` ブランチにコードをプッシュ
+2. GitHub リポジトリの `Actions` タブから手動で実行
+
+ワークフローが完了すると、アプリが TestFlight にアップロードされ、テスターがテストできるようになります。
 
 ## トラブルシューティング
 
-ビルドやデプロイに問題がある場合は、以下を確認してください：
+ワークフローが失敗した場合は、次の点を確認してください：
 
-1. 全てのシークレットが正しく設定されているか
-2. 証明書とプロビジョニングプロファイルが有効か
-3. Xcodeのバージョン互換性（必要に応じてワークフローファイルの `xcode-version` を変更）
-4. プロジェクト構造が正しく、ビルド設定が適切か
+1. すべてのシークレットが正しく設定されているか
+2. アプリのバンドルIDが正しいか（現在は `com.yourcompany.SOAPJournal` に設定）
+3. プロビジョニングプロファイルが有効で、アプリのバンドルIDと一致しているか
+4. App Store Connect API キーが有効で、適切な権限を持っているか
 
-## 注意事項
-
-- APIキーなどの機密情報はGitHub Secretsに安全に保存し、リポジトリに直接コミットしないでください
-- 証明書やプロビジョニングプロファイルの有効期限が近づいたら更新が必要です
-- ワークフローファイルに記述されているxcodebuildコマンドのオプションは、プロジェクト構造に合わせて調整が必要な場合があります
+エラーメッセージを確認して、GitHub リポジトリの `Actions` タブでワークフローの実行ログを調査することもできます。

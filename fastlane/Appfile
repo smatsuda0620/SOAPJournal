@@ -1,0 +1,6 @@
+app_identifier("com.yourcompany.SOAPJournal") # バンドルIDを実際のものに置き換えてください
+apple_id(ENV["APPLE_ID"]) # 環境変数から Apple ID を取得
+team_id(ENV["TEAM_ID"]) # 環境変数から Team ID を取得
+
+# アプリストアコネクトの情報
+itc_team_id(ENV["ITC_TEAM_ID"]) # 環境変数からiTunes Connect チームIDを取得（オプション）
