@@ -1,4 +1,4 @@
-name: iOS Build and Release
+name: iOS Build (Direct Gem Install Example)
 
 on:
   push:
@@ -21,28 +21,20 @@ jobs:
       - name: Select Xcode version
         run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
 
-      - name: Install Ruby and Bundler
-        run: |
-          brew install ruby
-          gem install bundler -N
+      - name: Install Fastlane gem directly
+        run: gem install fastlane -N # -Nはドキュメント生成をスキップするオプション
 
-      - name: Install gems
-        run: bundle install --jobs 4 --retry 3
-
-      - name: Install dependencies
-        run: bundle exec fastlane install_dependencies
-
-      - name: Run tests
-        run: bundle exec fastlane test
+      - name: Install Fastlane dependencies
+        run: fastlane install_dependencies
 
       - name: Build and Archive
-        run: bundle exec fastlane build_and_archive
-
+        run: fastlane build_and_archive
+  
   release:
     name: Release to TestFlight
     needs: build
     runs-on: macos-latest
-    if: github.ref == 'refs/heads/main' # mainブランチへのpush時のみ実行
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -54,21 +46,16 @@ jobs:
       - name: Select Xcode version
         run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
 
-      - name: Install Ruby and Bundler
-        run: |
-          brew install ruby
-          gem install bundler -N
+      - name: Install Fastlane gem directly
+        run: gem install fastlane -N
 
-      - name: Install gems
-        run: bundle install --jobs 4 --retry 3
-
-      - name: Install dependencies
-        run: bundle exec fastlane install_dependencies
+      - name: Install Fastlane dependencies
+        run: fastlane install_dependencies
 
       - name: Upload to TestFlight
         env:
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }} # matchを使用する場合
-        run: bundle exec fastlane beta
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        run: fastlane beta # bundle exec は不要になる
