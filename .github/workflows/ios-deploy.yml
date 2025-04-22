@@ -24,10 +24,9 @@ jobs:
       - name: Set up Bundler
         run: |
           gem install bundler -N
-          gem install fastlane -N
 
       - name: Run Fastlane dependencies
-        run: bundle exec fastlane install_dependencies --non-interactive
+        run: bundle exec fastlane install_dependencies
 
       - name: Build and Archive
         run: bundle exec fastlane build_and_archive
