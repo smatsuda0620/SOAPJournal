@@ -24,8 +24,7 @@ jobs:
       - name: Set up Bundler
         run: |
           gem install bundler -N
-          bundle config set --global path 'vendor/bundle'
-          bundle install --jobs 4 --retry 3
+          gem install fastlane -N
 
       - name: Run Fastlane dependencies
         run: bundle exec fastlane install_dependencies
