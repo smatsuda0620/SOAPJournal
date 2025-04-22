@@ -27,13 +27,10 @@ jobs:
           gem install fastlane -N
 
       - name: Run Fastlane dependencies
-        run: bundle exec fastlane install_dependencies
-
-      - name: Install Fastlane dependencies
-        run: fastlane install_dependencies
+        run: bundle exec fastlane install_dependencies --non-interactive
 
       - name: Build and Archive
-        run: fastlane build_and_archive
+        run: bundle exec fastlane build_and_archive
   
   release:
     name: Release to TestFlight
@@ -55,11 +52,11 @@ jobs:
         run: gem install fastlane -N
 
       - name: Install Fastlane dependencies
-        run: fastlane install_dependencies
+        run: bundle exec fastlane install_dependencies
 
       - name: Upload to TestFlight
         env:
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
-        run: fastlane beta
+        run: bundle exec fastlane beta
