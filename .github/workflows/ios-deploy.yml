@@ -99,12 +99,10 @@ jobs:
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
-          
-          
+
           # カスタム設定（必要な場合のみ使用）
           BUNDLE_IDENTIFIER: "com.steamside-tree.soapjournal"
-          PROVISIONING_PROFILE_NAME: ${{ secrets.PROVISIONING_PROFILE_NAME }}
-          SCHEME: ${{ env.SCHEME }}
+          TEAM_ID: ${{ secrets.TEAM_ID }}
           DEVELOPER_DIR: /Applications/Xcode_16.2.app/Contents/Developer
         run: |
           echo "====== ビルドステップ開始 ======"
