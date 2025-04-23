@@ -1,4 +1,4 @@
-name: iOS TestFlight Deployment
+aname: iOS TestFlight Deployment
 
 on:
   push:
@@ -95,17 +95,9 @@ jobs:
           APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
           
-          # Apple ID と関連情報
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-          
-          # 以下はAPIから自動取得されるようになったため、手動設定時のみ使用
-          TEAM_ID: ${{ secrets.TEAM_ID }}
-          APPLE_APP_ID: ${{ secrets.APPLE_APP_ID }}
-          ITC_TEAM_ID: ${{ secrets.ITC_TEAM_ID }}
           
           # カスタム設定（必要な場合のみ使用）
-          BUNDLE_IDENTIFIER: ${{ secrets.BUNDLE_IDENTIFIER }}
+          BUNDLE_IDENTIFIER: "com.steamside-tree.soapjournal"
           PROVISIONING_PROFILE_NAME: ${{ secrets.PROVISIONING_PROFILE_NAME }}
           SCHEME: ${{ env.SCHEME }}
           DEVELOPER_DIR: /Applications/Xcode_16.2.app/Contents/Developer
