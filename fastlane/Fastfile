@@ -261,7 +261,7 @@ platform :ios do
         output_directory: "./build",
         archive_path: "./build/SOAPJournal.xcarchive",
         clean: true,
-        allowProvisioningUpdates: true
+        xcargs: "-allowProvisioningUpdates"
       }
       
       # TeamIDが設定されている場合は追加
