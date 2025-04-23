@@ -1,4 +1,4 @@
-aname: iOS TestFlight Deployment
+name: iOS TestFlight Deployment
 
 on:
   push:
