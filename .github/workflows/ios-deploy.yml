@@ -59,6 +59,11 @@ jobs:
         with:
           ruby-version: "3.0"
           bundler-cache: true
+          
+      - name: Set up OpenSSL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openssl
 
       - name: Install dependencies
         run: |
