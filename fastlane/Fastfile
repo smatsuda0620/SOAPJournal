@@ -261,11 +261,7 @@ platform :ios do
         output_directory: "./build",
         archive_path: "./build/SOAPJournal.xcarchive",
         clean: true,
-        export_options: {
-          provisioningProfiles: {
-            "com.steamside-tree.soapjournal" => "GitHub Actions"
-          }
-        }
+        allowProvisioningUpdates: true
       }
       
       # TeamIDが設定されている場合は追加
