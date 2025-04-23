@@ -108,6 +108,7 @@ jobs:
           BUNDLE_IDENTIFIER: ${{ secrets.BUNDLE_IDENTIFIER }}
           PROVISIONING_PROFILE_NAME: ${{ secrets.PROVISIONING_PROFILE_NAME }}
           SCHEME: ${{ env.SCHEME }}
+          DEVELOPER_DIR: /Applications/Xcode_16.2.app/Contents/Developer
         run: |
           echo "====== ビルドステップ開始 ======"
           echo "スキーム: $SCHEME"
