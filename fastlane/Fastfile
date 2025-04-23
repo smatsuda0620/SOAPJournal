@@ -257,7 +257,7 @@ platform :ios do
       # ビルドオプションを設定
       build_app_options = {
         scheme: scheme,
-        export_method: "app-store",
+        export_method: "development",
         output_directory: "./build",
         archive_path: "./build/SOAPJournal.xcarchive",
         clean: true,
