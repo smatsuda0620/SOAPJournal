@@ -185,7 +185,6 @@ platform :ios do
       
       if profile_name
         UI.success("使用するプロビジョニングプロファイル: #{profile_name}")
-        match(type: "development", readonly: false)
         update_code_signing_settings(
           use_automatic_signing: false,
           path: Dir.glob("./**/*.xcodeproj").first || "SOAPJournal.xcodeproj",
