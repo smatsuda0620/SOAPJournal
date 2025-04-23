@@ -18,7 +18,7 @@ struct SOAPInputView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 12) { // スペースを16から12に縮小
             sectionView(
                 title: NSLocalizedString("scripture", comment: "Scripture section title"),
                 text: $scripture,
@@ -76,7 +76,7 @@ struct SOAPInputView: View {
                 }
             }
         }
-        .padding()
+        .padding(.horizontal, 16) // 水平方向のパディングを16に固定（ヘッダーと揃える）
         .sheet(isPresented: $showingPrayerTimer) {
             PrayerTimerView(prayerCompleted: $prayerCompleted)
         }
@@ -96,11 +96,11 @@ struct SOAPInputView: View {
     }
     
     private func sectionView(title: String, text: Binding<String>, placeholder: String) -> some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 2) { // スペーシングを明示的に2にする（タイトルと入力フィールドの間を狭く）
             Text(title)
                 .font(.headline)
                 .foregroundColor(Color("PrimaryBrown"))
-                .padding(.bottom, 4)
+                .padding(.bottom, 2) // 4から2に縮小
             
             TextEditor(text: text)
                 .frame(minHeight: 80)

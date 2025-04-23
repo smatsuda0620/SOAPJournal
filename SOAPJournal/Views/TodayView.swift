@@ -12,7 +12,7 @@ struct TodayView: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 12) { // スペースを20から12に縮小
                 ZStack(alignment: .topLeading) {
                     // ヘッダーの背景
                     Rectangle()
@@ -35,7 +35,7 @@ struct TodayView: View {
                     }
                     .padding(.horizontal, 16)
                 }
-                .padding(.bottom, 8)
+                .padding(.bottom, 4) // 下のパディングを8から4に縮小
                 
                 // SOAPフォーム
                 SOAPInputView(
@@ -48,7 +48,8 @@ struct TodayView: View {
                 
                 // 保存ボタンは削除 - 祈りが完了すると自動保存
             }
-            .padding()
+            .padding(.vertical, 12) // 垂直方向のパディングは12に
+            .padding(.horizontal, 16) // 水平方向のパディングを16に統一
         }
         .onAppear(perform: loadTodaysEntry)
         .alert(isPresented: $showingSavedAlert) {
