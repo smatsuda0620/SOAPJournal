@@ -37,16 +37,62 @@ struct TodayView: View {
                 }
                 .padding(.bottom, 4) // 下のパディングを8から4に縮小
                 
-                // SOAPフォーム
-                SOAPInputView(
-                    scripture: $scripture,
-                    observation: $observation,
-                    application: $application,
-                    prayerCompleted: $prayerCompleted
-                )
-                .environmentObject(devotionManager)
+                // SOAPフォーム（祈りが完了していたら閲覧モード、そうでなければ編集モード）
+                if prayerCompleted {
+                    // 閲覧モード（祈りが完了している場合）
+                    VStack(alignment: .leading, spacing: 16) {
+                        // 聖句セクション
+                        displaySection(title: NSLocalizedString("scripture", comment: "Scripture section title"), content: scripture)
+                        
+                        // 観察セクション
+                        displaySection(title: NSLocalizedString("observation", comment: "Observation section title"), content: observation)
+                        
+                        // 適用セクション
+                        displaySection(title: NSLocalizedString("application", comment: "Application section title"), content: application)
+                        
+                        // 祈りセクション
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(NSLocalizedString("prayer", comment: "Prayer section title"))
+                                .font(.headline)
+                                .foregroundColor(Color("PrimaryBrown"))
+                            
+                            Text("祈りを完了しました")
+                                .foregroundColor(Color("PrimaryBrown"))
+                                .padding()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .fill(Color("BackgroundCream"))
+                                )
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                } else {
+                    // 編集モード（祈りが完了していない場合）
+                    SOAPInputView(
+                        scripture: $scripture,
+                        observation: $observation,
+                        application: $application,
+                        prayerCompleted: $prayerCompleted
+                    )
+                    .environmentObject(devotionManager)
+                }
                 
-                // 保存ボタンは削除 - 祈りが完了すると自動保存
+                // 祈りが完了していない場合のみ保存ボタンを表示
+                if !prayerCompleted {
+                    Button(action: saveEntry) {
+                        Text(NSLocalizedString("save", comment: "Save button"))
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color("PrimaryBrown"))
+                            .cornerRadius(10)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                }
             }
             .padding(.vertical, 12) // 垂直方向のパディングは12に
             .padding(.horizontal, 16) // 水平方向のパディングを16に統一
@@ -85,6 +131,28 @@ struct TodayView: View {
         )
         
         showingSavedAlert = true
+    }
+    
+    // 閲覧モード用のセクション表示関数
+    private func displaySection(title: String, content: String) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.headline)
+                .foregroundColor(Color("PrimaryBrown"))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
+            Text(content.isEmpty ? "未入力" : content)
+                .font(.body)
+                .foregroundColor(.primary)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color("BackgroundCream"))
+                )
+                .multilineTextAlignment(.leading)
+        }
     }
 }
 

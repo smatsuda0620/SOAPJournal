@@ -7,7 +7,6 @@ struct PrayerTimerView: View {
     @State private var showCompleteButton = false
     @State private var timerProgress: CGFloat = 0.0
     @State private var timerValue: Int = 3 // 3秒のタイマー
-    @State private var scale: CGFloat = 1.0 // アニメーション用のスケール
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
@@ -23,19 +22,8 @@ struct PrayerTimerView: View {
                     .foregroundColor(Color("PrimaryBrown"))
                 
                 ZStack {
-                    Circle()
-                        .stroke(lineWidth: 15)
-                        .opacity(0.3)
-                        .foregroundColor(Color("PrimaryBrown"))
-                    
-                    Circle()
-                        .trim(from: 0.0, to: timerProgress)
-                        .stroke(style: StrokeStyle(lineWidth: 15, lineCap: .round, lineJoin: .round))
-                        .foregroundColor(Color("PrimaryBrown"))
-                        .rotationEffect(Angle(degrees: 270.0))
-                        .animation(.linear, value: timerProgress)
-                    
                     if showCompleteButton {
+                        // 完了ボタンだけを表示（円とタイマーは非表示）
                         Button(action: {
                             prayerCompleted = true
                             presentationMode.wrappedValue.dismiss()
@@ -50,12 +38,23 @@ struct PrayerTimerView: View {
                                 .cornerRadius(30)
                         }
                     } else {
+                        // カウントダウン中は円とタイマーを表示
+                        Circle()
+                            .stroke(lineWidth: 15)
+                            .opacity(0.3)
+                            .foregroundColor(Color("PrimaryBrown"))
+                        
+                        Circle()
+                            .trim(from: 0.0, to: timerProgress)
+                            .stroke(style: StrokeStyle(lineWidth: 15, lineCap: .round, lineJoin: .round))
+                            .foregroundColor(Color("PrimaryBrown"))
+                            .rotationEffect(Angle(degrees: 270.0))
+                            .animation(.linear, value: timerProgress)
+                        
                         Text("\(timerValue)")
                             .font(.system(size: 80))
                             .fontWeight(.bold)
                             .foregroundColor(Color("PrimaryBrown"))
-                            .scaleEffect(scale)
-                            .animation(.easeInOut(duration: 1), value: scale)
                     }
                 }
                 .frame(width: 250, height: 250)
@@ -75,12 +74,15 @@ struct PrayerTimerView: View {
                     }
                 }
                 
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Text(NSLocalizedString("cancel", comment: "Cancel button"))
-                        .foregroundColor(Color("PrimaryBrown"))
-                        .padding()
+                // カウントダウン中のみキャンセルボタンを表示
+                if !showCompleteButton {
+                    Button(action: {
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Text(NSLocalizedString("cancel", comment: "Cancel button"))
+                            .foregroundColor(Color("PrimaryBrown"))
+                            .padding()
+                    }
                 }
             }
             .padding()
@@ -88,17 +90,9 @@ struct PrayerTimerView: View {
         .onReceive(timer) { _ in
             if isTimerRunning {
                 if timerValue > 0 {
-                    // スケールを1に戻して新しい数字でアニメーションを開始
-                    scale = 1.0
-                    
                     // タイマー更新
                     timerValue -= 1
                     timerProgress = CGFloat(3 - timerValue) / 3.0
-                    
-                    // 縮小アニメーションを開始
-                    withAnimation(.easeInOut(duration: 0.9)) {
-                        scale = 0.6
-                    }
                 } else {
                     isTimerRunning = false
                     showCompleteButton = true

@@ -36,13 +36,7 @@ struct ContentView: View {
                 }
                 .tag(1)
             
-            // 履歴タブ
-            HistoryView(devotionManager: devotionManager)
-                .tabItem {
-                    Image(systemName: "list.bullet")
-                    Text(NSLocalizedString("history", comment: "History tab"))
-                }
-                .tag(2)
+            // 履歴タブを削除
         }
         .accentColor(Color("PrimaryBrown"))
         .onAppear {

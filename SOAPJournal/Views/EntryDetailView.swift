@@ -112,6 +112,7 @@ struct EntryDetailView: View {
             Text(title)
                 .font(.headline)
                 .foregroundColor(Color("PrimaryBrown"))
+                .frame(maxWidth: .infinity, alignment: .leading)
             
             Text(content)
                 .font(.body)
@@ -123,6 +124,7 @@ struct EntryDetailView: View {
                     RoundedRectangle(cornerRadius: 8)
                         .fill(Color("BackgroundCream"))
                 )
+                .multilineTextAlignment(.leading)
         }
     }
     

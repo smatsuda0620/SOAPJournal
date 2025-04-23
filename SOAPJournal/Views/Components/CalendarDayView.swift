@@ -23,7 +23,8 @@ struct CalendarDayView: View {
                         )
                 )
         }
-        .disabled(!isCurrentMonth)
+        // 現在の月でないか、エントリーがない場合は無効化
+        .disabled(!isCurrentMonth || !hasEntry)
     }
     
     // テキストの色を決定
