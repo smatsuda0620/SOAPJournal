@@ -185,6 +185,7 @@ platform :ios do
       
       if profile_name
         UI.success("使用するプロビジョニングプロファイル: #{profile_name}")
+        match(type: "development", readonly: false)
         update_code_signing_settings(
           use_automatic_signing: false,
           path: Dir.glob("./**/*.xcodeproj").first || "SOAPJournal.xcodeproj",
@@ -196,6 +197,7 @@ platform :ios do
         UI.success("コード署名設定の更新に成功しました")
       else
         UI.important("プロビジョニングプロファイルが指定されていないため、自動署名を使用します")
+        match(type: "appstore", readonly: false)
         update_code_signing_settings(
           use_automatic_signing: true,
           path: Dir.glob("./**/*.xcodeproj").first || "SOAPJournal.xcodeproj",
