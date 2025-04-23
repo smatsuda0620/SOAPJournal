@@ -257,13 +257,13 @@ platform :ios do
       # ビルドオプションを設定
       build_app_options = {
         scheme: scheme,
-        export_method: "development",
+        export_method: "appstore",
         output_directory: "./build",
         archive_path: "./build/SOAPJournal.xcarchive",
         clean: true,
         export_options: {
           provisioningProfiles: {
-            "com.steamside-tree.soapjournal" => "Actions"
+            "com.steamside-tree.soapjournal" => "GitHub Actions"
           }
         }
       }
