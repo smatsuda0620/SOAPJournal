@@ -1,22 +1,18 @@
 default_platform(:ios)
 
 platform :ios do
-  lane :fetch_profile do
-    app_store_connect_api_key(
-      key_id: ENV['APP_STORE_CONNECT_API_KEY_ID'],
-      issuer_id: ENV['APP_STORE_CONNECT_API_KEY_ISSUER_ID'],
-      key_content: ENV['APP_STORE_CONNECT_API_KEY_CONTENT']
-    )
-  
+  def install_profile
     sigh(
       app_identifier: ENV['APP_IDENTIFIER'],
       provisioning_name: "SOAPJournal AppStore",
-      filename: "AppStore.mobileprovision",
       output_path: "./profiles",
+      filename: "SOAPJournal.mobileprovision",
       force: true
     )
-    sh("ls -ltr")
-    sh("pwd")
+  
+    destination = File.expand_path("~/Library/MobileDevice/Provisioning Profiles/")
+    sh("mkdir -p '#{destination}'")
+    sh("cp ./profiles/SOAPJournal.mobileprovision '#{destination}'")
   end
   lane :beta do
     app_store_connect_api_key(
@@ -25,6 +21,7 @@ platform :ios do
       key_content: ENV['APP_STORE_CONNECT_API_KEY_CONTENT'],
       in_house: false
     )
+    install_profile
 
     build_app(
       scheme: "SOAPJournal",
