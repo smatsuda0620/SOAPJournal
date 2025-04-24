@@ -8,8 +8,6 @@ platform :ios do
       key_content: ENV['APP_STORE_CONNECT_API_KEY_CONTENT'],
       in_house: false
     )
-    install_profile
-    sleep 5
     build_app(
       scheme: "SOAPJournal",
       export_method: "app-store",
