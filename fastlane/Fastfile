@@ -10,7 +10,7 @@ platform :ios do
   
     sigh(
       app_identifier: ENV['APP_IDENTIFIER'],
-      provisioning_name: "com.steamside-tree.soapjournal AppStore",
+      provisioning_name: "Actions",
       readonly: true,
     )
   
@@ -30,7 +30,7 @@ platform :ios do
       export_method: "app-store",
       export_options: {
         provisioningProfiles: {
-          ENV['APP_IDENTIFIER'] => "com.steamside-tree.soapjournal AppStore"
+          ENV['APP_IDENTIFIER'] => "Actions"
         }
       }
     )
