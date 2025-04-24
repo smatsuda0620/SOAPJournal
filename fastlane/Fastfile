@@ -10,7 +10,10 @@ platform :ios do
       force: true
     )
     profile_path = sh("ls -t /Users/runner/work/SOAPJournal/SOAPJournal/profiles/AppStore.mobileprovision | head -n 1").strip
-    profile_uuid = sh("security cms -D -i '#{profile_path}' > /tmp/profile.plist && /usr/libexec/PlistBuddy -c 'Print :UUID' /tmp/profile.plist").strip
+    decoded_plist = "/tmp/profile.plist"
+    sh("security cms -D -i '#{profile_path}' > #{decoded_plist}")
+    profile_uuid = sh("/usr/libexec/PlistBuddy -c 'Print :UUID' #{decoded_plist}").strip
+  
     destination = "#{ENV['HOME']}/Library/MobileDevice/Provisioning Profiles/#{profile_uuid}.mobileprovision"
     sh("mkdir -p '#{File.dirname(destination)}'")
     sh("cp '#{profile_path}' '#{destination}'")
