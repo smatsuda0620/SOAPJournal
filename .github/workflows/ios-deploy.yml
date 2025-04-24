@@ -33,9 +33,7 @@ jobs:
           xcrun simctl list runtimes
 
       - name: Select Xcode version
-        run: |
-          sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
-          echo "Using Xcode: $(xcode-select -p)"
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
