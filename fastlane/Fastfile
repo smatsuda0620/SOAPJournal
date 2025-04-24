@@ -26,7 +26,7 @@ platform :ios do
       in_house: false
     )
     install_profile
-
+    sleep 5
     build_app(
       scheme: "SOAPJournal",
       export_method: "app-store",
