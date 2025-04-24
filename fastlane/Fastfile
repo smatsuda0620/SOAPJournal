@@ -16,8 +16,9 @@ platform :ios do
       force: true
     )
   
-    sh("mkdir -p ~/Library/MobileDevice/Provisioning\\ Profiles")
-    sh("cp ./profiles/AppStore.mobileprovision ~/Library/MobileDevice/Provisioning\\ Profiles/")
+    destination = File.expand_path("~/Library/MobileDevice/Provisioning Profiles/")
+    sh("mkdir -p '#{destination}'")
+    sh("cp ./profiles/AppStore.mobileprovision '#{destination}'")
   end
   lane :beta do
     app_store_connect_api_key(
