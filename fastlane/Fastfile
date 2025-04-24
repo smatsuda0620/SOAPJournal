@@ -11,6 +11,8 @@ platform :ios do
     sigh(
       app_identifier: ENV['APP_IDENTIFIER'],
       provisioning_name: "SOAPJournal AppStore",
+      filename: "AppStore.mobileprovision",
+      output_path: "./profiles",
       force: true
     )
   
