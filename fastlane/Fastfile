@@ -24,7 +24,7 @@ platform :ios do
 
     build_app(
       scheme: "SOAPJournal",
-      export_method: "app-store-connect",
+      export_method: "app-store",
       configuration: "Release",
       export_options: {
         provisioningProfiles: {
