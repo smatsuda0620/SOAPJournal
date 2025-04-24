@@ -9,6 +9,7 @@ platform :ios do
       filename: "SOAPJournal.mobileprovision",
       force: true
     )
+    sh("ls -ltr")
   end
   lane :beta do
     app_store_connect_api_key(
