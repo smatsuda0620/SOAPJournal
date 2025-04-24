@@ -10,8 +10,8 @@ platform :ios do
   
     sigh(
       app_identifier: ENV['APP_IDENTIFIER'],
-      provisioning_name: "AppStore",
-      force: true,
+      provisioning_name: "SOAPJournal AppStore",
+      force: true
     )
   
     sh("mkdir -p ~/Library/MobileDevice/Provisioning\\ Profiles")
@@ -30,7 +30,7 @@ platform :ios do
       export_method: "app-store",
       export_options: {
         provisioningProfiles: {
-          ENV['APP_IDENTIFIER'] => "AppStore"
+          ENV['APP_IDENTIFIER'] => "SOAPJournal AppStore"
         }
       }
     )
