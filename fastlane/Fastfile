@@ -11,7 +11,7 @@ platform :ios do
     sigh(
       app_identifier: ENV['APP_IDENTIFIER'],
       provisioning_name: "Actions",
-      readonly: true,
+      force: true,
     )
   
     sh("mkdir -p ~/Library/MobileDevice/Provisioning\\ Profiles")
