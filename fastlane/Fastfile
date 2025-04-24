@@ -32,7 +32,9 @@ platform :ios do
       export_options: {
         provisioningProfiles: {
           ENV['APP_IDENTIFIER'] => "SOAPJournal AppStore"
-        }
+        },
+        signingStyle: "manual",
+        teamID: ENV['TEAM_ID']
       }
     )
 
