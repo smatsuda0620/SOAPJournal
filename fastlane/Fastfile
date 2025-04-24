@@ -182,7 +182,10 @@ platform :ios do
       
       profile_name = ENV["PROVISIONING_PROFILE_NAME"]
       profile_name ||= lane_context[SharedValues::SIGH_NAME] if lane_context[SharedValues::SIGH_NAME]
-      
+      cert(
+        development: false,
+        team_id: ENV["TEAM_ID"]
+      )
       automatic_code_signing(
         use_automatic_signing: true,
         team_id: ENV["TEAM_ID"],
