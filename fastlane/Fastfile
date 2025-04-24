@@ -25,6 +25,7 @@ platform :ios do
     build_app(
       scheme: "SOAPJournal",
       export_method: "app-store",
+      configuration: "Release",
       export_options: {
         provisioningProfiles: {
           ENV['APP_IDENTIFIER'] => "SOAPJournal AppStore"
