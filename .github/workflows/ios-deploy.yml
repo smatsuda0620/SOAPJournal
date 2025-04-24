@@ -68,6 +68,7 @@ jobs:
             "issuer_id": "${APP_STORE_CONNECT_API_KEY_ISSUER_ID}",
             "key": "${APP_STORE_CONNECT_API_KEY_CONTENT}"
           }' > AuthKey.json
-
+      - name: Fetch provisioning profile
+        run: bundle exec fastlane fetch_profile
       - name: Run Fastlane
         run: bundle exec fastlane beta
