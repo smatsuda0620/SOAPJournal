@@ -1,6 +1,23 @@
 default_platform(:ios)
 
 platform :ios do
+  lane :fetch_profile do
+    app_store_connect_api_key(
+      key_id: ENV['APP_STORE_CONNECT_API_KEY_ID'],
+      issuer_id: ENV['APP_STORE_CONNECT_API_KEY_ISSUER_ID'],
+      key_content: ENV['APP_STORE_CONNECT_API_KEY_CONTENT']
+    )
+  
+    sigh(
+      app_identifier: ENV['APP_IDENTIFIER'],
+      readonly: true,
+      output_path: "./profiles",
+      filename: "AppStore.mobileprovision"
+    )
+  
+    sh("mkdir -p ~/Library/MobileDevice/Provisioning\\ Profiles")
+    sh("cp ./profiles/AppStore.mobileprovision ~/Library/MobileDevice/Provisioning\\ Profiles/")
+  end
   lane :beta do
     app_store_connect_api_key(
       key_id: ENV['APP_STORE_CONNECT_API_KEY_ID'],
