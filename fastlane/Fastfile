@@ -10,9 +10,8 @@ platform :ios do
   
     sigh(
       app_identifier: ENV['APP_IDENTIFIER'],
-      readonly: false,
-      output_path: "./profiles",
-      filename: "AppStore.mobileprovision"
+      provisioning_name: "com.steamside-tree.soapjournal AppStore",
+      readonly: true,
     )
   
     sh("mkdir -p ~/Library/MobileDevice/Provisioning\\ Profiles")
@@ -31,7 +30,7 @@ platform :ios do
       export_method: "app-store",
       export_options: {
         provisioningProfiles: {
-          ENV['APP_IDENTIFIER'] => "SOAPJournal"
+          ENV['APP_IDENTIFIER'] => "com.steamside-tree.soapjournal AppStore"
         }
       }
     )
