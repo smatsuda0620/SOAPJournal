@@ -10,13 +10,9 @@ platform :ios do
       force: true
     )
 
-    profile_path = sh("ls -t /Users/runner/work/SOAPJournal/SOAPJournal/profiles/AppStore.mobileprovision | head -n 1").strip
-    sh("file '#{profile_path}'")  # MIMEタイプの確認
-    sh("cat '#{profile_path}' | head -n 10")  # 中身の冒頭をチェック
-    profile_uuid = sh("security cms -D -i '#{profile_path}' | /usr/libexec/PlistBuddy -c 'Print :UUID' /dev/stdin").strip
-    destination = "#{ENV['HOME']}/Library/MobileDevice/Provisioning Profiles/#{profile_uuid}.mobileprovision"
-    sh("mkdir -p '#{File.dirname(destination)}'")
-    sh("cp '#{profile_path}' '#{destination}'")
+    destination = "#{ENV['HOME']}/Library/MobileDevice/Provisioning Profiles/"
+    sh("mkdir -p '#{destination}'")
+    sh("cp /Users/runner/work/SOAPJournal/SOAPJournal/profiles/AppStore.mobileprovision '#{destination}'")
     sh("xcodebuild -exportArchive")
   end
   lane :beta do
