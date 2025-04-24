@@ -66,5 +66,16 @@ jobs:
             "issuer_id": "${APP_STORE_CONNECT_API_KEY_ISSUER_ID}",
             "key": "${APP_STORE_CONNECT_API_KEY_CONTENT}"
           }' > AuthKey.json
+      - name: Install provisioning profile
+        run: |
+          echo "$PROFILE_B64" | base64 --decode > profile.mobileprovision
+      
+          # UUIDを抽出（Fastlaneでも可能だけどshellでも）
+          UUID=$(/usr/libexec/PlistBuddy -c 'Print UUID' /dev/stdin <<< "$(security cms -D -i profile.mobileprovision)")
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          cp profile.mobileprovision "$HOME/Library/MobileDevice/Provisioning Profiles/$UUID.mobileprovision"
+        shell: bash
+        env:
+          PROFILE_B64: ${{ secrets.PROFILE_B64 }}
       - name: Run Fastlane
         run: bundle exec fastlane beta
