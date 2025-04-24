@@ -161,7 +161,10 @@ platform :ios do
       if ENV["PROVISIONING_PROFILE_NAME"] && !ENV["PROVISIONING_PROFILE_NAME"].empty?
         UI.success("環境変数から取得したプロビジョニングプロファイル名: #{ENV["PROVISIONING_PROFILE_NAME"]}")
       else
-        # 自動でプロビジョニングプロファイルを取得
+        cert(
+          development: false,
+          team_id: ENV["TEAM_ID"]
+        )
         sigh(
           api_key: lane_context[SharedValues::APP_STORE_CONNECT_API_KEY],
           app_identifier: ENV["BUNDLE_IDENTIFIER"],
@@ -182,10 +185,6 @@ platform :ios do
       
       profile_name = ENV["PROVISIONING_PROFILE_NAME"]
       profile_name ||= lane_context[SharedValues::SIGH_NAME] if lane_context[SharedValues::SIGH_NAME]
-      cert(
-        development: false,
-        team_id: ENV["TEAM_ID"]
-      )
       automatic_code_signing(
         use_automatic_signing: true,
         team_id: ENV["TEAM_ID"],
