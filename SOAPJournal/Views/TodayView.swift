@@ -19,6 +19,7 @@ struct TodayView: View {
                         .fill(Color("BackgroundCream"))
                         .frame(height: 100)
                         .cornerRadius(12)
+                        .padding(.horizontal, 16) // 背景にもパディングを追加して他の要素と揃える
                     
                     VStack(alignment: .leading, spacing: 8) {
                         // タイトル
@@ -33,7 +34,7 @@ struct TodayView: View {
                             .font(.headline)
                             .foregroundColor(Color("PrimaryBrown").opacity(0.8))
                     }
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, 32) // 内側のパディングを増やす（外側16 + 内側16 = 32）
                 }
                 .padding(.bottom, 4) // 下のパディングを8から4に縮小
                 

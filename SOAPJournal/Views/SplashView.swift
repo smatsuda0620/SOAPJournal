@@ -15,20 +15,13 @@ struct SplashView: View {
                     .scaledToFill()
                     .edgesIgnoringSafeArea(.all)
                 
-                VStack(spacing: 30) {
-                    // タイトル
-                    Text("SOAP Journal")
-                        .font(.system(size: 40, weight: .bold))
-                        .foregroundColor(.white)
-                    
-                    // サブタイトル
-                    Text(NSLocalizedString("app_subtitle", comment: "App subtitle"))
-                        .font(.system(size: 20))
-                        .foregroundColor(.white.opacity(0.9))
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 30)
-                }
-                .opacity(opacity)
+                // ロゴのみ表示（テキストを削除）
+                Image("AppIcon")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 150, height: 150)
+                    .cornerRadius(20)
+                    .opacity(opacity)
             }
             .onAppear {
                 // フェードインアニメーション

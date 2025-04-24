@@ -84,6 +84,18 @@ struct CalendarView: View {
             selectedMonth = Date()
             devotionManager.fetchAllEntries()
         }
+        .onChange(of: showingEntryDetail) { isShowing in
+            if isShowing {
+                // シートが表示されるタイミングでエントリーを再取得
+                if let date = selectedDate {
+                    // エントリーを確実に取得するために少し待機
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        // エントリー情報を確実に更新
+                        devotionManager.fetchAllEntries()
+                    }
+                }
+            }
+        }
         .sheet(isPresented: $showingEntryDetail) {
             if let selectedDate = selectedDate {
                 if let entry = devotionManager.fetchEntry(for: selectedDate) {
