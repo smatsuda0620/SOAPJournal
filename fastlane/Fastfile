@@ -11,6 +11,7 @@ platform :ios do
     sigh(
       app_identifier: ENV['APP_IDENTIFIER'],
       readonly: true,
+      provisioning_name: "GitHub Actions",
       output_path: "./profiles",
       filename: "AppStore.mobileprovision"
     )
