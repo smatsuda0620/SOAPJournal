@@ -15,6 +15,8 @@ platform :ios do
       output_path: "./profiles",
       force: true
     )
+    sh("ls -ltr")
+    sh("pwd")
   end
   lane :beta do
     app_store_connect_api_key(
