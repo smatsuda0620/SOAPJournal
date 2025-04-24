@@ -6,12 +6,12 @@ platform :ios do
       app_identifier: ENV['APP_IDENTIFIER'],
       provisioning_name: "SOAPJournal AppStore",
       output_path: "./profiles",
-      filename: "SOAPJournal.mobileprovision",
+      filename: "AppStore.mobileprovision",
       force: true
     )
     destination = "#{ENV['HOME']}/Library/MobileDevice/Provisioning Profiles/"
     sh("mkdir -p '#{destination}'")
-    sh("cp /Users/runner/work/SOAPJournal/SOAPJournal/profiles/SOAPJournal.mobileprovision '#{destination}'")
+    sh("cp ./profiles/AppStore.mobileprovision '#{destination}'")
   end
   lane :beta do
     api_key = app_store_connect_api_key(
