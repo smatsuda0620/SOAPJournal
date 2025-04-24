@@ -8,34 +8,17 @@ on:
   workflow_dispatch: # 手動で実行できるようにする
 
 jobs:
-  check_api_keys:
-    name: APIキーの確認
-    runs-on: ubuntu-latest
-    outputs:
-      has_api_keys: ${{ steps.check_keys.outputs.has_api_keys }}
-    steps:
-      - name: Check required secrets
-        id: check_keys
-        env:
-          HAS_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID != '' }}
-          HAS_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID != '' }}
-          HAS_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT != '' }}
-        run: |
-          if [[ "$HAS_API_KEY_ID" == "true" && "$HAS_API_KEY_ISSUER_ID" == "true" && "$HAS_API_KEY_CONTENT" == "true" ]]; then
-            echo "必要なAPIキーが設定されています"
-            echo "has_api_keys=true" >> $GITHUB_OUTPUT
-          else
-            echo "⚠️ APIキーが不足しています。GITHUB_ACTIONS_SETUP.mdを参照して必要なシークレットを設定してください"
-            echo "has_api_keys=false" >> $GITHUB_OUTPUT
-          fi
-
   deploy_to_testflight:
     name: Build and Deploy to TestFlight
-    needs: check_api_keys
-    if: ${{ needs.check_api_keys.outputs.has_api_keys == 'true' }}
     runs-on: macos-latest
     env:
-      BUNDLE_IDENTIFIER: com.steamside-tree.soapjournal
+      APP_IDENTIFIER: com.steamside-tree.soapjournal
+      APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+      APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+      APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+      P12_FILE: ${{ secrets.P12_FILE }}
+      P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+      TEAM_ID: ${{ secrets.TEAM_ID }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -69,117 +52,22 @@ jobs:
         run: |
           gem install bundler
           bundle install
-          # プロジェクト情報を出力
-          bundle exec fastlane debug_info || true
+      - name: Prepare certificates
+        run: |
+          echo "$P12_FILE" | base64 --decode > signing.p12
+          security create-keychain -p build123 build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p build123 build.keychain
+          security import signing.p12 -k build.keychain -P "$P12_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k build123 build.keychain
 
-      - name: Show project structure
+      - name: Generate API key JSON
         run: |
-          echo "===== プロジェクト構造 ====="
-          find . -type f -name "*.xcodeproj" | sort
-          find . -type f -name "Info.plist" | sort
-          echo "========================="
+          echo '{
+            "key_id": "${APP_STORE_CONNECT_API_KEY_ID}",
+            "issuer_id": "${APP_STORE_CONNECT_API_KEY_ISSUER_ID}",
+            "key": "${APP_STORE_CONNECT_API_KEY_CONTENT}"
+          }' > AuthKey.json
 
-      - name: Setup build environment
-        id: setup_env
-        run: |
-          # バージョン情報を取得して出力
-          TIMESTAMP=$(date +%Y%m%d%H%M%S)
-          echo "BUILD_TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
-          echo "タイムスタンプ: $TIMESTAMP を設定しました"
-          
-          # スキーム名を自動検出
-          SCHEME=$(xcodebuild -list -json 2>/dev/null | ruby -e 'require "json"; puts JSON.parse(STDIN.read)["project"]["schemes"].first rescue "SOAPJournal"')
-          echo "SCHEME=$SCHEME" >> $GITHUB_ENV
-          echo "スキーム: $SCHEME を検出しました"
-
-      - name: Build for TestFlight
-        id: build_step
-        env:
-          # App Store Connect APIキー (必須)
-          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
-          APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
-          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
-
-          # カスタム設定（必要な場合のみ使用）
-          BUNDLE_IDENTIFIER: "com.steamside-tree.soapjournal"
-          TEAM_ID: ${{ secrets.TEAM_ID }}
-          DEVELOPER_DIR: /Applications/Xcode_16.2.app/Contents/Developer
-        run: |
-          echo "====== ビルドステップ開始 ======"
-          echo "スキーム: $SCHEME"
-          echo "タイムスタンプ: ${{ env.BUILD_TIMESTAMP }}"
-          
-          # ビルドとアップロードを試行
-          bundle exec fastlane beta || exit_code=$?
-          
-          if [ "$exit_code" != "" ]; then
-            echo "ビルドに失敗しました（終了コード: $exit_code）。詳細情報:"
-            echo "SCHEME: $SCHEME"
-            
-            # ビルドログの詳細出力
-            echo "====== ビルドログ ======"
-            if [ -f "fastlane/report.xml" ]; then
-              cat fastlane/report.xml
-            fi
-            
-            exit $exit_code
-          fi
-        
-      - name: Upload build artifacts
-        if: success() || failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifacts-${{ env.BUILD_TIMESTAMP }}
-          path: |
-            ./build/*.ipa
-            ./build/*.dSYM.zip
-            ./fastlane/report.xml
-            ./fastlane/report.html
-            ./fastlane/logs
-            
-      - name: Collect diagnostic information on failure
-        if: failure()
-        run: |
-          echo "ビルドに失敗しました。診断情報を収集しています..."
-          
-          echo "===== ファストレーンレポート ====="
-          if [ -f "fastlane/report.xml" ]; then
-            cat fastlane/report.xml || true
-          fi
-          
-          echo "===== Xcodeプロジェクト情報 ====="
-          find . -name "*.xcodeproj" -type d -exec sh -c 'echo "プロジェクト: {}"; xcodebuild -list -project "{}" 2>/dev/null || echo "情報取得失敗"' \; || true
-          
-          echo "===== Info.plist内容 ====="
-          find . -name "Info.plist" -type f -exec sh -c 'echo "ファイル: {}"; plutil -p "{}" 2>/dev/null || echo "解析失敗"' \; || true
-          
-          echo "診断情報の収集が完了しました"
-            
-      - name: Post build status
-        if: always()
-        run: |
-          if [ "${{ job.status }}" == "success" ]; then
-            echo "✅ ビルドとTestFlightへのアップロードが成功しました！"
-            echo "TestFlight経由でアプリをテストできます。"
-          else
-            echo "❌ ビルドが失敗しました。詳細情報："
-            echo "- ビルドログを確認して具体的なエラーを特定してください"
-            echo "- APIキーと権限が正しく設定されているか確認してください"
-            echo "- プロジェクト設定とバンドルIDが一致しているか確認してください"
-          fi
-
-  failed_key_check:
-    name: APIキー不足の通知
-    needs: check_api_keys
-    if: ${{ needs.check_api_keys.outputs.has_api_keys == 'false' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Display API key message
-        run: |
-          echo "⚠️ TestFlightへのデプロイに必要なAPIキーが不足しています"
-          echo "必要なシークレット:"
-          echo "- APP_STORE_CONNECT_API_KEY_ID"
-          echo "- APP_STORE_CONNECT_API_KEY_ISSUER_ID"
-          echo "- APP_STORE_CONNECT_API_KEY_CONTENT"
-          echo ""
-          echo "GITHUB_ACTIONS_SETUP.mdを参照して、必要なAPIキーを設定してください"
+      - name: Run Fastlane
+        run: bundle exec fastlane beta
