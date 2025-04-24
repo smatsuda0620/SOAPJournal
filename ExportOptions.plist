@@ -10,8 +10,8 @@
     <string>manual</string>
     <key>provisioningProfiles</key>
     <dict>
-        <key>$(DEVELOPER_APP_IDENTIFIER)</key>
-        <string>$(PROVISIONING_PROFILE_SPECIFIER)</string>
+        <key>com.steamside-tree.soapjournal</key>
+        <string>SOAPJournal AppStore</string>
     </dict>
     <key>signingCertificate</key>
     <string>Apple Distribution</string>
