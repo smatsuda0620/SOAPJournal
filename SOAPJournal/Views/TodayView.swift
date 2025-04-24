@@ -27,12 +27,13 @@ struct TodayView: View {
                             .font(.largeTitle)
                             .fontWeight(.bold)
                             .foregroundColor(Color("PrimaryBrown"))
-                            .padding(.top, 8)
+                            .padding(.top, 16) // 上部パディングを16に増やす
                         
                         // 今日の日付
                         Text(Date().displayString)
                             .font(.headline)
                             .foregroundColor(Color("PrimaryBrown").opacity(0.8))
+                            .padding(.bottom, 16) // 下部パディングも16に設定
                     }
                     .padding(.horizontal, 32) // 内側のパディングを増やす（外側16 + 内側16 = 32）
                 }

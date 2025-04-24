@@ -4,7 +4,7 @@ struct EntryDetailView: View {
     let entry: DevotionEntry
     let devotionManager: DevotionManager
     
-    @State private var isEditing = false
+    @State private var isEditing = false // 常に閲覧モードから開始
     @State private var scripture: String
     @State private var observation: String
     @State private var application: String
@@ -35,18 +35,16 @@ struct EntryDetailView: View {
                     Spacer()
                     
                     if isEditing {
+                        // 編集モードの場合だけキャンセルボタンを表示
                         Button(NSLocalizedString("cancel", comment: "Cancel button")) {
                             // 編集をキャンセルして元の値に戻す
                             isEditing = false
                             resetValues()
                         }
                         .foregroundColor(Color("PrimaryBrown"))
-                    } else {
-                        Button(NSLocalizedString("edit", comment: "Edit button")) {
-                            isEditing = true
-                        }
-                        .foregroundColor(Color("PrimaryBrown"))
                     }
+                    // 編集ボタンは削除
+                    
                 }
                 .padding(.horizontal)
                 .padding(.top)
