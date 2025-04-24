@@ -9,7 +9,8 @@ platform :ios do
       filename: "SOAPJournal.mobileprovision",
       force: true
     )
-    sh("ls -ltr")
+    sh("mkdir -p $HOME/Library/MobileDevice/Provisioning\\ Profiles")
+    sh("cp ./profiles/SOAPJournal.mobileprovision $HOME/Library/MobileDevice/Provisioning\\ Profiles/")
   end
   lane :beta do
     app_store_connect_api_key(
