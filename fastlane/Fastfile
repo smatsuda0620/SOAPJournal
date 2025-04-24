@@ -248,7 +248,11 @@ platform :ios do
         output_directory: "./build",
         archive_path: "./build/SOAPJournal.xcarchive",
         clean: true,
-        xcargs: "-allowProvisioningUpdates"
+        export_options: {
+          provisioningProfiles: {
+            ENV["BUNDLE_IDENTIFIER"] => ENV["PROVISIONING_PROFILE_NAME"] || lane_context[SharedValues::SIGH_NAME]
+          }
+        }
       }
       
       # TeamIDが設定されている場合は追加
