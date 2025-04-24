@@ -10,7 +10,7 @@ platform :ios do
   
     sigh(
       app_identifier: ENV['APP_IDENTIFIER'],
-      provisioning_name: "Actions",
+      provisioning_name: "AppStore",
       force: true,
     )
   
@@ -30,7 +30,7 @@ platform :ios do
       export_method: "app-store",
       export_options: {
         provisioningProfiles: {
-          ENV['APP_IDENTIFIER'] => "Actions"
+          ENV['APP_IDENTIFIER'] => "AppStore"
         }
       }
     )
