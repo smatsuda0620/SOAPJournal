@@ -9,10 +9,6 @@ platform :ios do
       filename: "SOAPJournal.mobileprovision",
       force: true
     )
-  
-    destination = File.expand_path("~/Library/MobileDevice/Provisioning Profiles/")
-    sh("mkdir -p '#{destination}'")
-    sh("cp ./profiles/SOAPJournal.mobileprovision '#{destination}'")
   end
   lane :beta do
     app_store_connect_api_key(
