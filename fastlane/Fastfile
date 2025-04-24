@@ -9,7 +9,7 @@ platform :ios do
       filename: "AppStore.mobileprovision",
       force: true
     )
-    profile_path = sh("ls -t /Users/runner/work/SOAPJournal/SOAPJournal/profiles/AppStore.mobileprovisio | head -n 1").strip
+    profile_path = sh("ls -t /Users/runner/work/SOAPJournal/SOAPJournal/profiles/AppStore.mobileprovision | head -n 1").strip
     profile_uuid = sh("security cms -D -i '#{profile_path}' > /tmp/profile.plist && /usr/libexec/PlistBuddy -c 'Print :UUID' /tmp/profile.plist").strip
     destination = "#{ENV['HOME']}/Library/MobileDevice/Provisioning Profiles/#{profile_uuid}.mobileprovision"
     sh("mkdir -p '#{File.dirname(destination)}'")
