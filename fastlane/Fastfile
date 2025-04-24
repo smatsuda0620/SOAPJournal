@@ -15,7 +15,7 @@ platform :ios do
       output_path: "./profiles",
       force: true
     )
-  
+    sh("ls -la ./profiles")
     destination = File.expand_path("~/Library/MobileDevice/Provisioning Profiles/")
     sh("mkdir -p '#{destination}'")
     sh("cp ./profiles/AppStore.mobileprovision '#{destination}'")
