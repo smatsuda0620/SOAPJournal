@@ -170,7 +170,8 @@ platform :ios do
           app_identifier: ENV["BUNDLE_IDENTIFIER"],
           provisioning_name: "GitHub Actions",
           readonly: true,
-          team_id: ENV["TEAM_ID"]
+          team_id: ENV["TEAM_ID"], 
+          output_path: "./profiles"
         )
         UI.success("プロビジョニングプロファイルの取得に成功しました: #{lane_context[SharedValues::SIGH_NAME]}")
       end
