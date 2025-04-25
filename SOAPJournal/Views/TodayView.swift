@@ -80,21 +80,7 @@ struct TodayView: View {
                     .environmentObject(devotionManager)
                 }
                 
-                // 祈りが完了していない場合のみ保存ボタンを表示
-                if !prayerCompleted {
-                    Button(action: saveEntry) {
-                        Text(NSLocalizedString("save", comment: "Save button"))
-                            .font(.headline)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color("PrimaryBrown"))
-                            .cornerRadius(10)
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
-                }
+                // 保存ボタンを削除 - 祈りの完了時に自動的に保存
             }
             .padding(.vertical, 12) // 垂直方向のパディングは12に
             .padding(.horizontal, 16) // 水平方向のパディングを16に統一
@@ -110,6 +96,9 @@ struct TodayView: View {
     }
     
     private func loadTodaysEntry() {
+        // 確実に最新のエントリーを取得
+        devotionManager.fetchTodaysEntry()
+        
         if let entry = devotionManager.todaysEntry {
             scripture = entry.scripture
             observation = entry.observation
@@ -131,6 +120,9 @@ struct TodayView: View {
             application: application,
             prayerCompleted: prayerCompleted
         )
+        
+        // 保存後、再度状態を更新
+        loadTodaysEntry()
         
         showingSavedAlert = true
     }

@@ -80,10 +80,17 @@ struct SOAPInputView: View {
         .sheet(isPresented: $showingPrayerTimer) {
             PrayerTimerView(prayerCompleted: $prayerCompleted)
         }
+        // 各テキストフィールドの変更を監視して自動保存
+        .onChange(of: scripture) { _ in saveIfValid() }
+        .onChange(of: observation) { _ in saveIfValid() }
+        .onChange(of: application) { _ in saveIfValid() }
         .onChange(of: prayerCompleted) { completed in
             if completed {
                 // 祈りが完了したら自動保存
                 saveEntry()
+            } else {
+                // 祈りを取り消した場合も保存
+                saveIfValid()
             }
         }
         .alert(isPresented: $showingSavedAlert) {
@@ -102,30 +109,49 @@ struct SOAPInputView: View {
                 .foregroundColor(Color("PrimaryBrown"))
                 .padding(.bottom, 2) // 4から2に縮小
             
-            TextEditor(text: text)
-                .frame(minHeight: 80)
-                .padding(8)
-                .background(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color("PrimaryBrown").opacity(0.3), lineWidth: 1)
-                        .background(Color("BackgroundCream").cornerRadius(8))
-                )
+            ZStack {
+                TextEditor(text: text)
+                    .frame(minHeight: 80)
+                    .padding(8)
+                    // ScrollViewのバウンスを無効化
+                    .onAppear {
+                        UITextView.appearance().bounces = false
+                    }
+            }
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color("PrimaryBrown").opacity(0.3), lineWidth: 1)
+                    .background(Color("BackgroundCream").cornerRadius(8))
+            )
                 .overlay(
                     Group {
                         if text.wrappedValue.isEmpty {
                             Text(placeholder)
                                 .foregroundColor(Color("PrimaryBrown").opacity(0.5))
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 12)
+                                .padding(12)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                                 .allowsHitTesting(false)
                         }
-                    }, alignment: .topLeading
+                    }, alignment: .center
                 )
         }
     }
 }
 
 extension SOAPInputView {
+    // 入力が有効な場合のみ保存
+    private func saveIfValid() {
+        if !scripture.isEmpty || !observation.isEmpty || !application.isEmpty {
+            devotionManager.createEntry(
+                scripture: scripture,
+                observation: observation,
+                application: application,
+                prayerCompleted: prayerCompleted
+            )
+            // 自動保存時は通知を表示しない
+        }
+    }
+    
     // エントリーを保存する関数
     private func saveEntry() {
         devotionManager.createEntry(

@@ -4,29 +4,12 @@ struct EntryDetailView: View {
     let entry: DevotionEntry
     let devotionManager: DevotionManager
     
-    @State private var isEditing = false // 常に閲覧モードから開始
-    @State private var scripture: String
-    @State private var observation: String
-    @State private var application: String
-    @State private var prayerCompleted: Bool
-    
     @Environment(\.presentationMode) var presentationMode
-    
-    init(entry: DevotionEntry, devotionManager: DevotionManager) {
-        self.entry = entry
-        self.devotionManager = devotionManager
-        
-        // 初期値を設定
-        _scripture = State(initialValue: entry.scripture)
-        _observation = State(initialValue: entry.observation)
-        _application = State(initialValue: entry.application)
-        _prayerCompleted = State(initialValue: entry.prayerCompleted)
-    }
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                // ヘッダー部分（日付と編集ボタン）
+                // ヘッダー部分（日付表示のみ）
                 HStack {
                     Text(entry.date.displayString)
                         .font(.headline)
@@ -34,72 +17,44 @@ struct EntryDetailView: View {
                     
                     Spacer()
                     
-                    if isEditing {
-                        // 編集モードの場合だけキャンセルボタンを表示
-                        Button(NSLocalizedString("cancel", comment: "Cancel button")) {
-                            // 編集をキャンセルして元の値に戻す
-                            isEditing = false
-                            resetValues()
-                        }
-                        .foregroundColor(Color("PrimaryBrown"))
+                    // 閉じるボタン
+                    Button(action: { presentationMode.wrappedValue.dismiss() }) {
+                        Image(systemName: "xmark.circle")
+                            .foregroundColor(Color("PrimaryBrown"))
+                            .font(.title3)
                     }
-                    // 編集ボタンは削除
-                    
                 }
                 .padding(.horizontal)
                 .padding(.top)
                 
-                if isEditing {
-                    // 編集モード
-                    SOAPInputView(
-                        scripture: $scripture,
-                        observation: $observation,
-                        application: $application,
-                        prayerCompleted: $prayerCompleted
-                    )
+                // 閲覧モード（編集機能を完全に削除）
+                VStack(alignment: .leading, spacing: 20) {
+                    // 各セクション表示（ボタン動作を削除）
+                    sectionView(title: NSLocalizedString("scripture", comment: "Scripture section"), content: entry.scripture)
+                    sectionView(title: NSLocalizedString("observation", comment: "Observation section"), content: entry.observation)
+                    sectionView(title: NSLocalizedString("application", comment: "Application section"), content: entry.application)
                     
-                    // 保存ボタン
-                    Button(action: saveChanges) {
-                        Text(NSLocalizedString("save_changes", comment: "Save changes button"))
-                            .font(.headline)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color("PrimaryBrown"))
-                            .cornerRadius(10)
-                    }
-                    .padding(.horizontal)
-                    .padding(.bottom)
-                    
-                    // 削除ボタン
-                    Button(action: deleteEntry) {
-                        Text(NSLocalizedString("delete", comment: "Delete button"))
-                            .font(.headline)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.red.opacity(0.8))
-                            .cornerRadius(10)
-                    }
-                    .padding(.horizontal)
-                    .padding(.bottom)
-                } else {
-                    // 閲覧モード
-                    VStack(alignment: .leading, spacing: 20) {
-                        Button(action: { presentationMode.wrappedValue.dismiss() }) {
-                            sectionView(title: NSLocalizedString("scripture", comment: "Scripture section"), content: entry.scripture)
-                        }
-                        Button(action: { presentationMode.wrappedValue.dismiss() }) {
-                            sectionView(title: NSLocalizedString("observation", comment: "Observation section"), content: entry.observation)
-                        }
-                        Button(action: { presentationMode.wrappedValue.dismiss() }) {
-                            sectionView(title: NSLocalizedString("application", comment: "Application section"), content: entry.application)
+                    // 祈りの完了状態
+                    if entry.prayerCompleted {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(NSLocalizedString("prayer", comment: "Prayer section title"))
+                                .font(.headline)
+                                .foregroundColor(Color("PrimaryBrown"))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            Text("祈りを完了しました")
+                                .foregroundColor(Color("PrimaryBrown"))
+                                .padding()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .fill(Color("BackgroundCream"))
+                                )
+                                .multilineTextAlignment(.leading)
                         }
                     }
-                    .padding()
                 }
+                .padding()
             }
         }
     }
@@ -126,32 +81,7 @@ struct EntryDetailView: View {
         }
     }
     
-    // エントリーの変更を保存
-    private func saveChanges() {
-        devotionManager.updateEntry(
-            entry,
-            scripture: scripture,
-            observation: observation,
-            application: application,
-            prayerCompleted: prayerCompleted
-        )
-        
-        isEditing = false
-    }
-    
-    // エントリーを削除
-    private func deleteEntry() {
-        devotionManager.deleteEntry(entry)
-        presentationMode.wrappedValue.dismiss()
-    }
-    
-    // 編集をキャンセルして元の値に戻す
-    private func resetValues() {
-        scripture = entry.scripture
-        observation = entry.observation
-        application = entry.application
-        prayerCompleted = entry.prayerCompleted
-    }
+    // 編集機能を削除したため、関連関数も削除
 }
 
 struct EntryDetailView_Previews: PreviewProvider {
