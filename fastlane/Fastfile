@@ -16,7 +16,7 @@ platform :ios do
         provisioningProfiles: {
           ENV['APP_IDENTIFIER'] => "SOAPJournal AppStore"
         },
-        signingCertificate: "Shuji Matsuda",
+        signingCertificate: ""Apple Distribution",
         signingStyle: "manual",
         teamID: ENV['TEAM_ID']
       }
