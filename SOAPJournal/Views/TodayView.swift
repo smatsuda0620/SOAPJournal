@@ -10,9 +10,22 @@ struct TodayView: View {
     
     @State private var showingSavedAlert = false
     
+    // UIApplicationを使ってキーボードを閉じるために必要
+    @FocusState private var isInputActive: Bool
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 12) { // スペースを20から12に縮小
+                // 画面タップでキーボードを閉じる
+                if !prayerCompleted {
+                    Color.clear
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            isInputActive = false
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .position(x: UIScreen.main.bounds.width / 2, y: 0)
+                }
                 ZStack(alignment: .topLeading) {
                     // ヘッダーの背景
                     Rectangle()
@@ -75,7 +88,8 @@ struct TodayView: View {
                         scripture: $scripture,
                         observation: $observation,
                         application: $application,
-                        prayerCompleted: $prayerCompleted
+                        prayerCompleted: $prayerCompleted,
+                        isInputActive: $isInputActive
                     )
                     .environmentObject(devotionManager)
                 }

@@ -5,9 +5,17 @@ struct SOAPInputView: View {
     @Binding var observation: String
     @Binding var application: String
     @Binding var prayerCompleted: Bool
+    @Binding var isInputActive: Bool
     
     @State private var showingPrayerTimer = false
     @State private var showingSavedAlert = false
+    @State private var showingClipboardAlert = false
+    @State private var clipboardText: String = ""
+    
+    // 各セクションのフォーカス状態
+    @FocusState private var isScriptureFocused: Bool
+    @FocusState private var isObservationFocused: Bool  
+    @FocusState private var isApplicationFocused: Bool
     
     // DevotionManagerを環境変数から取得
     @EnvironmentObject var devotionManager: DevotionManager
@@ -19,10 +27,12 @@ struct SOAPInputView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) { // スペースを16から12に縮小
+            
             sectionView(
                 title: NSLocalizedString("scripture", comment: "Scripture section title"),
                 text: $scripture,
-                placeholder: NSLocalizedString("scripture_placeholder", comment: "Scripture input placeholder")
+                placeholder: NSLocalizedString("scripture_placeholder", comment: "Scripture input placeholder"),
+                isScripture: true // 聖句入力欄を識別するためのフラグ
             )
             
             sectionView(
@@ -100,9 +110,23 @@ struct SOAPInputView: View {
                 dismissButton: .default(Text(NSLocalizedString("ok", comment: "OK button")))
             )
         }
+        .alert("クリップボードのテキストを聖句に入力しますか？", isPresented: $showingClipboardAlert) {
+            Button("はい") {
+                scripture = clipboardText
+                isScriptureFocused = true
+            }
+            Button("いいえ") {
+                isScriptureFocused = true
+            }
+        } message: {
+            Text("クリップボードに以下のテキストがあります：\n\n\(clipboardText)")
+        }
+        .onAppear {
+            checkClipboardForScripture()
+        }
     }
     
-    private func sectionView(title: String, text: Binding<String>, placeholder: String) -> some View {
+    private func sectionView(title: String, text: Binding<String>, placeholder: String, isScripture: Bool = false) -> some View {
         VStack(alignment: .leading, spacing: 2) { // スペーシングを明示的に2にする（タイトルと入力フィールドの間を狭く）
             Text(title)
                 .font(.headline)
@@ -113,6 +137,18 @@ struct SOAPInputView: View {
                 TextEditor(text: text)
                     .frame(minHeight: 80)
                     .padding(8)
+                    // フォーカス状態を連動
+                    .focused($isScriptureFocused, equals: title == NSLocalizedString("scripture", comment: "Scripture section title"))
+                    .focused($isObservationFocused, equals: title == NSLocalizedString("observation", comment: "Observation section title"))
+                    .focused($isApplicationFocused, equals: title == NSLocalizedString("application", comment: "Application section title"))
+                    // 親ビューのフォーカス状態と連動
+                    .onChange(of: isInputActive) { active in
+                        if !active {
+                            isScriptureFocused = false
+                            isObservationFocused = false
+                            isApplicationFocused = false
+                        }
+                    }
                     // ScrollViewのバウンスを無効化
                     .onAppear {
                         UITextView.appearance().bounces = false
@@ -163,6 +199,28 @@ extension SOAPInputView {
         
         showingSavedAlert = true
     }
+    
+    // クリップボードの内容を確認し、聖句入力に使えるかどうかをチェック
+    private func checkClipboardForScripture() {
+        // すでに聖句が入力されている場合はスキップ
+        if !scripture.isEmpty {
+            return
+        }
+        
+        // クリップボードの内容を取得
+        if let clipboardString = UIPasteboard.general.string, !clipboardString.isEmpty {
+            // 空でなければクリップボードの内容を保存
+            clipboardText = clipboardString
+            
+            // 一定の文字数以内であれば聖句として使用を提案
+            if clipboardString.count < 500 {
+                // ビューがロードされた後に少し遅らせてアラートを表示
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.showingClipboardAlert = true
+                }
+            }
+        }
+    }
 }
 
 struct SOAPInputView_Previews: PreviewProvider {
@@ -171,7 +229,8 @@ struct SOAPInputView_Previews: PreviewProvider {
             scripture: .constant(""),
             observation: .constant(""),
             application: .constant(""),
-            prayerCompleted: .constant(false)
+            prayerCompleted: .constant(false),
+            isInputActive: .constant(false)
         )
         .environmentObject(DevotionManager(context: PersistenceController.preview.container.viewContext))
     }

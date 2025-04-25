@@ -96,10 +96,20 @@ struct CalendarView: View {
                 }
             }
         }
-        .sheet(isPresented: $showingEntryDetail) {
+        .sheet(isPresented: $showingEntryDetail, onDismiss: {
+            // シート閉じる時にも確実にエントリー情報を更新
+            devotionManager.fetchAllEntries()
+        }) {
+            // ドラッグの距離を半分に設定
+            let shortDragSheetConfiguration = PresentationDetent.custom { context in
+                return context.maxHeight / 2
+            }
             if let selectedDate = selectedDate {
                 if let entry = devotionManager.fetchEntry(for: selectedDate) {
                     EntryDetailView(entry: entry, devotionManager: devotionManager)
+                        .presentationDetents([.medium, shortDragSheetConfiguration])
+                        .presentationDragIndicator(.visible)
+                        .interactiveDismissDisabled(false)
                 } else {
                     VStack {
                         Text(NSLocalizedString("no_entry_for_date", comment: "No entry for this date"))
@@ -121,6 +131,9 @@ struct CalendarView: View {
                     .frame(maxWidth: .infinity, maxHeight: 200)
                     .background(Color("BackgroundCream"))
                     .cornerRadius(12)
+                    .presentationDetents([shortDragSheetConfiguration])
+                    .presentationDragIndicator(.visible)
+                    .interactiveDismissDisabled(false)
                 }
             }
         }
