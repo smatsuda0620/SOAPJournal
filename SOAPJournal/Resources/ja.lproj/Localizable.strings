@@ -18,7 +18,7 @@
 "scripture" = "S: 聖句";
 "observation" = "O: 観察";
 "application" = "A: 適用";
-"prayer" = "P: 祈り";
+"prayer" = "祈り";
 
 "scripture_placeholder" = "今日の聖書箇所を入力してください";
 "observation_placeholder" = "聖句から観察したこと、気づいたことを書きましょう";

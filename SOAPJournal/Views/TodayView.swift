@@ -118,6 +118,11 @@ struct TodayView: View {
             observation = entry.observation
             application = entry.application
             prayerCompleted = entry.prayerCompleted
+            
+            // 祈りが完了している場合は表示モードを維持
+            if entry.prayerCompleted {
+                prayerCompleted = true
+            }
         } else {
             // 今日のエントリーがない場合は空の状態にする
             scripture = ""

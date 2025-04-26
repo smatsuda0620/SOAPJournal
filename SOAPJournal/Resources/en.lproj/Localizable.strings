@@ -18,7 +18,7 @@
 "scripture" = "S: Scripture";
 "observation" = "O: Observation";
 "application" = "A: Application";
-"prayer" = "P: Prayer";
+"prayer" = "Prayer";
 
 "scripture_placeholder" = "Enter today's Bible passage";
 "observation_placeholder" = "Write what you observed or noticed from the scripture";
