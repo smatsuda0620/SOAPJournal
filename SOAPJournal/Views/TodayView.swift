@@ -11,7 +11,7 @@ struct TodayView: View {
     @State private var showingSavedAlert = false
     
     // UIApplicationを使ってキーボードを閉じるために必要
-    @FocusState private var isInputActive: Bool
+    @State private var isInputActive: Bool = false
     
     var body: some View {
         ScrollView {

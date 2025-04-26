@@ -101,9 +101,7 @@ struct CalendarView: View {
             devotionManager.fetchAllEntries()
         }) {
             // ドラッグの距離を半分に設定
-            let shortDragSheetConfiguration = PresentationDetent.custom { context in
-                return context.maxHeight / 2
-            }
+            let shortDragSheetConfiguration = PresentationDetent.fraction(0.5)
             if let selectedDate = selectedDate {
                 if let entry = devotionManager.fetchEntry(for: selectedDate) {
                     EntryDetailView(entry: entry, devotionManager: devotionManager)

@@ -13,9 +13,9 @@ struct SOAPInputView: View {
     @State private var clipboardText: String = ""
     
     // 各セクションのフォーカス状態
-    @FocusState private var isScriptureFocused: Bool
-    @FocusState private var isObservationFocused: Bool  
-    @FocusState private var isApplicationFocused: Bool
+    @State private var isScriptureFocused: Bool = false
+    @State private var isObservationFocused: Bool = false
+    @State private var isApplicationFocused: Bool = false
     
     // DevotionManagerを環境変数から取得
     @EnvironmentObject var devotionManager: DevotionManager
@@ -137,10 +137,22 @@ struct SOAPInputView: View {
                 TextEditor(text: text)
                     .frame(minHeight: 80)
                     .padding(8)
-                    // フォーカス状態を連動
-                    .focused($isScriptureFocused, equals: title == NSLocalizedString("scripture", comment: "Scripture section title"))
-                    .focused($isObservationFocused, equals: title == NSLocalizedString("observation", comment: "Observation section title"))
-                    .focused($isApplicationFocused, equals: title == NSLocalizedString("application", comment: "Application section title"))
+                    // フォーカス状態を設定
+                    .onTapGesture {
+                        if title == NSLocalizedString("scripture", comment: "Scripture section title") {
+                            isScriptureFocused = true
+                            isObservationFocused = false
+                            isApplicationFocused = false
+                        } else if title == NSLocalizedString("observation", comment: "Observation section title") {
+                            isScriptureFocused = false
+                            isObservationFocused = true
+                            isApplicationFocused = false
+                        } else if title == NSLocalizedString("application", comment: "Application section title") {
+                            isScriptureFocused = false
+                            isObservationFocused = false
+                            isApplicationFocused = true
+                        }
+                    }
                     // 親ビューのフォーカス状態と連動
                     .onChange(of: isInputActive) { active in
                         if !active {
