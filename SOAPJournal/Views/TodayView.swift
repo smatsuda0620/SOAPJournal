@@ -16,16 +16,16 @@ struct TodayView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 12) { // スペースを20から12に縮小
-                // 画面タップでキーボードを閉じる
-                if !prayerCompleted {
-                    Color.clear
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            isInputActive = false
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .position(x: UIScreen.main.bounds.width / 2, y: 0)
-                }
+                // 画面全体をタップ可能にして、入力欄以外タップでキーボードを閉じる
+                Rectangle()
+                    .foregroundColor(.clear)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        isInputActive = false
+                        hideKeyboard() // キーボードを非表示にする
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .ignoresSafeArea()
                 ZStack(alignment: .topLeading) {
                     // ヘッダーの背景
                     Rectangle()
@@ -166,6 +166,11 @@ struct TodayView: View {
                 )
                 .multilineTextAlignment(.leading)
         }
+    }
+    
+    // キーボードを非表示にするヘルパー関数
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 

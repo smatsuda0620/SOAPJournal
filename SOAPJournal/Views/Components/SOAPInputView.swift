@@ -17,6 +17,11 @@ struct SOAPInputView: View {
     @State private var isObservationFocused: Bool = false
     @State private var isApplicationFocused: Bool = false
     
+    // いずれかのフィールドにフォーカスがあるか
+    private var isAnyFieldFocused: Bool {
+        isScriptureFocused || isObservationFocused || isApplicationFocused
+    }
+    
     // DevotionManagerを環境変数から取得
     @EnvironmentObject var devotionManager: DevotionManager
     
@@ -228,6 +233,7 @@ extension SOAPInputView {
             if clipboardString.count < 500 {
                 // ビューがロードされた後に少し遅らせてアラートを表示
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    // 常にユーザーに選択させる
                     self.showingClipboardAlert = true
                 }
             }

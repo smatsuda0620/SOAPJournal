@@ -7,54 +7,44 @@ struct EntryDetailView: View {
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                // ヘッダー部分（日付表示のみ）
-                HStack {
-                    Text(entry.date.displayString)
-                        .font(.headline)
-                        .foregroundColor(Color("PrimaryBrown"))
-                    
-                    Spacer()
-                    
-                    // 閉じるボタン
-                    Button(action: { presentationMode.wrappedValue.dismiss() }) {
-                        Image(systemName: "xmark.circle")
-                            .foregroundColor(Color("PrimaryBrown"))
-                            .font(.title3)
-                    }
+        // 画面全体をタップ可能にし、タップで閉じられるようにする
+        ZStack {
+            // 背景も含めた全画面タップで閉じる
+            Color.clear
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    presentationMode.wrappedValue.dismiss()
                 }
-                .padding(.horizontal)
-                .padding(.top)
-                
-                // 閲覧モード（編集機能を完全に削除）
-                VStack(alignment: .leading, spacing: 20) {
-                    // 各セクション表示（ボタン動作を削除）
-                    sectionView(title: NSLocalizedString("scripture", comment: "Scripture section"), content: entry.scripture)
-                    sectionView(title: NSLocalizedString("observation", comment: "Observation section"), content: entry.observation)
-                    sectionView(title: NSLocalizedString("application", comment: "Application section"), content: entry.application)
-                    
-                    // 祈りの完了状態
-                    if entry.prayerCompleted {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(NSLocalizedString("prayer", comment: "Prayer section title"))
-                                .font(.headline)
+            
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    // ヘッダー部分（日付表示のみ）
+                    HStack {
+                        Text(entry.date.displayString)
+                            .font(.headline)
+                            .foregroundColor(Color("PrimaryBrown"))
+                        
+                        Spacer()
+                        
+                        // 閉じるボタン
+                        Button(action: { presentationMode.wrappedValue.dismiss() }) {
+                            Image(systemName: "xmark.circle")
                                 .foregroundColor(Color("PrimaryBrown"))
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            
-                            Text("祈りを完了しました")
-                                .foregroundColor(Color("PrimaryBrown"))
-                                .padding()
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .fill(Color("BackgroundCream"))
-                                )
-                                .multilineTextAlignment(.leading)
+                                .font(.title3)
                         }
                     }
+                    .padding(.horizontal)
+                    .padding(.top)
+                    
+                    // 閲覧モード（編集機能を完全に削除）
+                    VStack(alignment: .leading, spacing: 20) {
+                        // 各セクション表示（ボタン動作を削除）- 祈りは表示しない
+                        sectionView(title: NSLocalizedString("scripture", comment: "Scripture section"), content: entry.scripture)
+                        sectionView(title: NSLocalizedString("observation", comment: "Observation section"), content: entry.observation)
+                        sectionView(title: NSLocalizedString("application", comment: "Application section"), content: entry.application)
+                    }
+                    .padding()
                 }
-                .padding()
             }
         }
     }
@@ -80,8 +70,6 @@ struct EntryDetailView: View {
                 .multilineTextAlignment(.leading)
         }
     }
-    
-    // 編集機能を削除したため、関連関数も削除
 }
 
 struct EntryDetailView_Previews: PreviewProvider {

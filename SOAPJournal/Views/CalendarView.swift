@@ -100,12 +100,12 @@ struct CalendarView: View {
             // シート閉じる時にも確実にエントリー情報を更新
             devotionManager.fetchAllEntries()
         }) {
-            // ドラッグの距離を半分に設定
-            let shortDragSheetConfiguration = PresentationDetent.fraction(0.5)
+            // ドラッグの距離を画面の9割に設定
+            let largeSheetConfiguration = PresentationDetent.fraction(0.9)
             if let selectedDate = selectedDate {
                 if let entry = devotionManager.fetchEntry(for: selectedDate) {
                     EntryDetailView(entry: entry, devotionManager: devotionManager)
-                        .presentationDetents([.medium, shortDragSheetConfiguration])
+                        .presentationDetents([largeSheetConfiguration])
                         .presentationDragIndicator(.visible)
                         .interactiveDismissDisabled(false)
                 } else {
@@ -129,7 +129,7 @@ struct CalendarView: View {
                     .frame(maxWidth: .infinity, maxHeight: 200)
                     .background(Color("BackgroundCream"))
                     .cornerRadius(12)
-                    .presentationDetents([shortDragSheetConfiguration])
+                    .presentationDetents([.medium])
                     .presentationDragIndicator(.visible)
                     .interactiveDismissDisabled(false)
                 }
