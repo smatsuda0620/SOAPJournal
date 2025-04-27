@@ -117,12 +117,10 @@ struct TodayView: View {
             scripture = entry.scripture
             observation = entry.observation
             application = entry.application
-            prayerCompleted = entry.prayerCompleted
             
-            // 祈りが完了している場合は表示モードを維持
-            if entry.prayerCompleted {
-                prayerCompleted = true
-            }
+            // デボーション実績がある場合は表示モードを維持（固定値表示）
+            // エントリーが存在するだけで祈り完了扱いにして編集できないようにする
+            prayerCompleted = true
         } else {
             // 今日のエントリーがない場合は空の状態にする
             scripture = ""
