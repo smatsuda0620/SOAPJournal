@@ -5,10 +5,13 @@ struct PrayerTimerView: View {
     @Binding var prayerCompleted: Bool
     @State private var isTimerRunning = true // 自動的に開始するように変更
     @State private var showCompleteButton = false
+    @State private var showStartText = false
+    @State private var startTextOpacity = 1.0 // 開始テキストの透明度
     @State private var timerProgress: CGFloat = 0.0
     @State private var timerValue: Int = 3 // 3秒のタイマー
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    let fadeOutDuration: Double = 5.0 // フェードアウトの時間（秒）
     
     var body: some View {
         ZStack {
@@ -37,6 +40,15 @@ struct PrayerTimerView: View {
                                 .background(Color("PrimaryBrown"))
                                 .cornerRadius(30)
                         }
+                        .transition(.opacity)
+                    } else if showStartText {
+                        // カウントダウン終了後、「開始」テキストを表示
+                        Text("開始")
+                            .font(.system(size: 80))
+                            .fontWeight(.bold)
+                            .foregroundColor(Color("PrimaryBrown"))
+                            .opacity(startTextOpacity)
+                            .transition(.opacity)
                     } else {
                         // カウントダウン中は円とタイマーを表示
                         Circle()
@@ -95,10 +107,26 @@ struct PrayerTimerView: View {
                     timerProgress = CGFloat(3 - timerValue) / 3.0
                 } else {
                     isTimerRunning = false
-                    showCompleteButton = true
+                    
+                    // カウントダウン終了時に「開始」テキストを表示
+                    showStartText = true
+                    startTextOpacity = 1.0
+                    
+                    // 5秒かけてフェードアウト
+                    withAnimation(.linear(duration: fadeOutDuration)) {
+                        startTextOpacity = 0.0
+                    }
+                    
+                    // フェードアウト後に完了ボタンを表示
+                    DispatchQueue.main.asyncAfter(deadline: .now() + fadeOutDuration) {
+                        showStartText = false
+                        showCompleteButton = true
+                    }
                 }
             }
         }
+        .animation(.easeInOut, value: showStartText)
+        .animation(.easeInOut, value: showCompleteButton)
     }
 }
 
